@@ -16,8 +16,7 @@ class SwerveTrain
 #include "NavX.h"
 #include "SwerveModule.h"
 #include "VectorDouble.h"
-#include "auto/Recorder.h"
-#include "Limelight.h"
+#include "Recorder.h"
 
 class SwerveTrain {
 

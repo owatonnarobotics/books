@@ -3,7 +3,6 @@
 #include <frc/DriverStation.h>
 
 #include "SwerveTrain.h"
-#include "VectorDouble.h"
 
 SwerveTrain::SwerveTrain(
         const int frontRightCANDriveID,
