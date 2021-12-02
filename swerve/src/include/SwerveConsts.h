@@ -35,8 +35,3 @@ const double R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorAt = 10.0;
 const double R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorSpeed = .075;
 const double R_swerveTrainHoldAngleSpeedCalculatonSecondEndBehaviorAt = 5.0;
 const double R_swerveTrainHoldAngleSpeedCalculatonSecondEndBehaviorSpeed = .075;
-
-//This is the number of digits past the decimal place that will be stored when
-//being recorded.
-const int R_zionAutoControllerRecorderPrecision = 5;
-const int R_zionAutoControllerTotalDigits = R_zionAutoControllerRecorderPrecision + 2;

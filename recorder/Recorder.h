@@ -9,6 +9,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DriverStation.h>
 
+#include "RecorderConsts.h"
+
 class Recorder {
 
     public:
