@@ -15,11 +15,10 @@ class Recorder {
 
     public:
 
-        Recorder() {
+        static Recorder& GetInstance() {
 
-            m_log.str("");
-            m_log.clear();
-            m_counter = 0;
+            static Recorder* instance = new Recorder;
+            return *instance;
         }
 
         void Record(const double x, const double y, const double z, const bool precision) {
@@ -63,6 +62,18 @@ class Recorder {
         }
 
     private:
+         Recorder() {
+
+            m_log.str("");
+            m_log.clear();
+            m_counter = 0;
+        }
+
+        Recorder(const Recorder&) = delete;
+        Recorder& operator = (const Recorder&) = delete;
+        Recorder(Recorder&&) = delete;
+        Recorder& operator = (Recorder&&) = delete;
+
         std::stringstream m_log;
         int m_counter;
 };
