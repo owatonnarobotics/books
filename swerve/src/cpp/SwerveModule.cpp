@@ -1,7 +1,7 @@
 #include <math.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include "SwerveModule.h"
+#include "swerve/src/include/SwerveModule.h"
 
 SwerveModule::SwerveModule(const int &canDriveID, const int &canSwerveID) {
 

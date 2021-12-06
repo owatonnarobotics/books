@@ -2,7 +2,7 @@
 
 #include <frc/DriverStation.h>
 
-#include "SwerveTrain.h"
+#include "swerve/src/include/SwerveTrain.h"
 
 SwerveTrain::SwerveTrain(
         const int frontRightCANDriveID,
@@ -12,15 +12,13 @@ SwerveTrain::SwerveTrain(
         const int rearLeftCANDriveID,
         const int rearLeftCANSwerveID,
         const int rearRightCANDriveID,
-        const int rearRightCANSwerveID,
-        NavX &navXToSet
+        const int rearRightCANSwerveID
     ) {
 
     m_frontRight = new SwerveModule(frontRightCANDriveID, frontRightCANSwerveID);
     m_frontLeft = new SwerveModule(frontLeftCANDriveID, frontLeftCANSwerveID);
     m_rearLeft = new SwerveModule(rearLeftCANDriveID, rearLeftCANSwerveID);
     m_rearRight = new SwerveModule(rearRightCANDriveID, rearRightCANSwerveID);
-    navX = &navXToSet;
 }
 
 void SwerveTrain::SetDriveSpeed(const double &driveSpeed) {
@@ -105,7 +103,7 @@ bool SwerveTrain::AssumeTurnAroundCenterPositions() {
 
 bool SwerveTrain::SetZionMotorsToVector(VectorDouble &vectorToSet) {
 
-    double angle = navX->getYawFull();
+    double angle = NavX::GetInstance().getYawFull();
     bool fr = m_frontRight->AssumeSwervePosition(m_frontRight->AbsoluteVectorToNics(vectorToSet, angle));
     bool fl = m_frontLeft->AssumeSwervePosition(m_frontLeft->AbsoluteVectorToNics(vectorToSet, angle));
     bool rl = m_rearLeft->AssumeSwervePosition(m_rearLeft->AbsoluteVectorToNics(vectorToSet, angle));
@@ -167,12 +165,12 @@ void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, con
 
                 holdAngle = navX->getYawFull();
             }*/
-            angle = navX->getYaw() - holdAngle;
+            angle = NavX::GetInstance().getYaw() - holdAngle;
             //wasHolding = true;
         }
         else {
 
-            angle = navX->getYawFull();
+            angle = NavX::GetInstance().getYawFull();
             //wasHolding = false;
         }
 
@@ -203,7 +201,7 @@ void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, con
                 z = -z;
             }
             z *= -1;
-            angle = navX->getYawFull();
+            angle = NavX::GetInstance().getYawFull();
             frc::SmartDashboard::PutNumber("HoldAngleSpeedCalculaton", z);
         }
 

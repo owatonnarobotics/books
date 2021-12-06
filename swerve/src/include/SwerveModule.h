@@ -8,8 +8,8 @@ class SwerveModule
 
 #include "rev/CANSparkMax.h"
 
-#include "SwerveConsts.h"
-#include "VectorDouble.h"
+#include "swerve/src/include/SwerveConsts.h"
+#include "vectors/VectorDouble.h"
 
 class SwerveModule {
 

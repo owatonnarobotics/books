@@ -13,42 +13,25 @@ class SwerveTrain
 
 #include "rev/CANSparkMax.h"
 
-#include "NavX.h"
-#include "SwerveModule.h"
-#include "VectorDouble.h"
-#include "Recorder.h"
+#include "navX/NavX.h"
+#include "swerve/src/include/SwerveModule.h"
+#include "vectors/VectorDouble.h"
+#include "recorder/Recorder.h"
 
 class SwerveTrain {
 
     public:
         /**
-         * Constructor for a SwerveTrain.
+         * Static method that gets the singleton instance of SwerveTrain
          * 
-         * Creates a swerve train with the swerve modules on the front right,
-         * front left, back left, and back right positions, and takes a NavX
-         * for use in calculating rotational vectors.
-         * 
-         * @param frontRightCANDriveID  CAN ID of the front right   drive   motor
-         * @param frontRightCANSwerveID CAN ID of the front right   swerve  motor
-         * @param frontLeftCANDriveID   CAN ID of the front left    drive   motor
-         * @param frontLeftCANSwerveID  CAN ID of the front left    swerve  motor
-         * @param rearLeftCANDriveID    CAN ID of the rear  right   drive   motor
-         * @param rearLeftCANSwerveID   CAN ID of the rear  right   swerve  motor
-         * @param rearRightCANDriveID   CAN ID of the rear  left    drive   motor
-         * @param rearRightCANSwerveID  CAN ID of the rear  left    swerve  motor 
-         * @param navXToSet A reference to a NavX
+         * This method returns the only allowed instance of SwerveTrain.
+         * SwerveTrain is a singleton pattern.
          */
-        SwerveTrain(
-            const int frontRightCANDriveID,
-            const int frontRightCANSwerveID,
-            const int frontLeftCANDriveID,
-            const int frontLeftCANSwerveID,
-            const int rearLeftCANDriveID,
-            const int rearLeftCANSwerveID,
-            const int rearRightCANDriveID,
-            const int rearRightCANSwerveID,
-            NavX &navXToSet
-        );
+        static SwerveTrain& GetInstance() {
+
+            static SwerveTrain* instance = new SwerveTrain(0, 1, 2, 3, 4, 5, 6, 7);
+            return *instance;
+        }
 
         /**
          * Sets a speed to the driving motors on the train. Defaults to zero.
@@ -167,10 +150,26 @@ class SwerveTrain {
         SwerveModule *m_frontLeft;
         SwerveModule *m_rearLeft;
         SwerveModule *m_rearRight;
-        NavX *navX;
 
         enum ZionDirections {
 
             kForward, kRight, kBackward, kLeft
         };
+    
+    private:
+        SwerveTrain(
+            const int frontRightCANDriveID,
+            const int frontRightCANSwerveID,
+            const int frontLeftCANDriveID,
+            const int frontLeftCANSwerveID,
+            const int rearLeftCANDriveID,
+            const int rearLeftCANSwerveID,
+            const int rearRightCANDriveID,
+            const int rearRightCANSwerveID
+        );
+
+        SwerveTrain(const SwerveTrain&) = delete;
+        SwerveTrain& operator = (const SwerveTrain&) = delete;
+        SwerveTrain(SwerveTrain&&) = delete;
+        SwerveTrain& operator = (SwerveTrain&&) = delete;
 };

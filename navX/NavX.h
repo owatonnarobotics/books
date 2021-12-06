@@ -35,20 +35,9 @@ Public Methods
 class NavX {
 
     public:
-        NavX(const int &connectionType) {
-
-            if (connectionType == kUSB) {
-
-                navX = new AHRS(frc::SPI::kOnboardCS0);
-            }
-            else if (connectionType == kMXP) {
-
-                navX = new AHRS(frc::SPI::kMXP);
-            }
-            else {
-
-                navX = new AHRS(frc::SPI::kMXP);
-            }
+        static NavX& GetInstance() {
+            static NavX* instance = new NavX(ConnectionType::kMXP);
+            return *instance;
         }
 
         double getYaw() {
@@ -91,5 +80,26 @@ class NavX {
         };
 
     private:
+        NavX(const int &connectionType) {
+
+            if (connectionType == kUSB) {
+
+                navX = new AHRS(frc::SPI::kOnboardCS0);
+            }
+            else if (connectionType == kMXP) {
+
+                navX = new AHRS(frc::SPI::kMXP);
+            }
+            else {
+
+                navX = new AHRS(frc::SPI::kMXP);
+            }
+        }
+
+        NavX(const NavX&) = delete;
+        NavX& operator = (const NavX&) = delete;
+        NavX(NavX&&) = delete;
+        NavX& operator = (NavX&&) = delete;
+
         AHRS *navX;
 };
