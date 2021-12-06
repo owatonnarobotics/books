@@ -34,20 +34,6 @@ class SwerveTrain {
         }
 
         /**
-         * Sets a speed to the driving motors on the train. Defaults to zero.
-         * 
-         * @param driveSpeed The speed to set
-         */
-        void SetDriveSpeed(const double &driveSpeed = 0);
-
-        /**
-         * Sets a speed to all swerve motors on the train. Defaults to zero.
-         * 
-         * @param swerveSpeed The speed to set
-         */
-        void SetSwerveSpeed(const double &swerveSpeed = 0);
-
-        /**
          * 
          * Sets the drive motor's brake mode.
          * 
@@ -99,30 +85,9 @@ class SwerveTrain {
         bool AssumeZeroPosition();
 
         /**
-         * Drives the swerves to thier turn around center positions.
-         * 
-         * The swerve turn around center positions are at 45 degree angles in a
-         * way that allows the robot to turn around the center as efficiently
-         * as possible.
-         * 
-         * @return Whether or not the swerves are at their turn around center positions
-         */
-        bool AssumeTurnAroundCenterPositions();
-
-        /**
          * Puts the current swerve encoder positions to the SmartDashboard.
          */
         void PrintSwervePositions();
-
-        /**
-         * Sets the swerve modules to a vector.
-         * 
-         * The vector is absolute, or in other words in relation to the field.
-         *
-         * @param vectorToSet The vector to set the swerve modules to
-         * @return Whether or not the swerve modules are at the vector
-         */
-        bool SetZionMotorsToVector(VectorDouble &vectorToSet);
 
         /**
          * Drives the swere modules field oriented.
@@ -172,4 +137,39 @@ class SwerveTrain {
         SwerveTrain& operator = (const SwerveTrain&) = delete;
         SwerveTrain(SwerveTrain&&) = delete;
         SwerveTrain& operator = (SwerveTrain&&) = delete;
+
+        /**
+         * Sets a speed to the driving motors on the train. Defaults to zero.
+         * 
+         * @param driveSpeed The speed to set
+         */
+        void SetDriveSpeed(const double &driveSpeed = 0);
+
+        /**
+         * Sets a speed to all swerve motors on the train. Defaults to zero.
+         * 
+         * @param swerveSpeed The speed to set
+         */
+        void SetSwerveSpeed(const double &swerveSpeed = 0);
+
+        /**
+         * Drives the swerves to thier turn around center positions.
+         * 
+         * The swerve turn around center positions are at 45 degree angles in a
+         * way that allows the robot to turn around the center as efficiently
+         * as possible.
+         * 
+         * @return Whether or not the swerves are at their turn around center positions
+         */
+        bool AssumeTurnAroundCenterPositions();
+
+        /**
+         * Sets the swerve modules to a vector.
+         * 
+         * The vector is absolute, or in other words in relation to the field.
+         *
+         * @param vectorToSet The vector to set the swerve modules to
+         * @return Whether or not the swerve modules are at the vector
+         */
+        bool SetZionMotorsToVector(VectorDouble &vectorToSet);
 };
