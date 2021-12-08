@@ -69,25 +69,16 @@ double SwerveModule::GetDrivePosition() {
     return m_driveMotorEncoder->GetPosition();
 }
 
+// Initially, this function would return the raw encoder value. Now, it returns
+// the relative position of the swerve.
 double SwerveModule::GetSwervePosition() {
 
-    return m_swerveMotorEncoder->GetPosition();
+    return SingleNicFromPosition(m_swerveMotorEncoder->GetPosition() - GetSwerveZeroPosition());
 }
 
-double SwerveModule::GetSwervePositionSingleRotation() {
+double SwerveModule::SingleNicFromPosition(const double position) {
 
-    double clockwiseNicsFromZero = m_swerveMotorEncoder->GetPosition() - m_swerveZeroPosition;
-    //If more than a full rotation from zero...
-    if (clockwiseNicsFromZero >= R_nicsConstant) {
-
-        //Return the most local equivalent position...
-        return fmod(clockwiseNicsFromZero, R_nicsConstant);
-    }
-    else {
-
-        //Otherwise, return only the position.
-        return clockwiseNicsFromZero;
-    }
+    return fmod(position - GetSwerveZeroPosition(), R_nicsConstant) + (position < 0 ? R_nicsConstant : 0);
 }
 
 double SwerveModule::GetSwerveZeroPosition() {
@@ -112,53 +103,37 @@ double SwerveModule::AbsoluteVectorToNics(VectorDouble &vector, const double &an
 
 bool SwerveModule::AssumeSwervePosition(const double &positionToAssumeRaw) {
 
-    double currentPosition = GetSwervePositionSingleRotation();
-    double positionToAssume = fmod(positionToAssumeRaw, R_nicsConstant);
+    double modded = SingleNicFromPosition(positionToAssumeRaw);
+    if (IsAtPositionWithinTolerance(modded)) {
 
-    
-
-    frc::SmartDashboard::PutNumber("ASP", abs(abs(fmod(abs(positionToAssume - GetSwervePositionSingleRotation()), R_nicsConstant) - R_nicsConstant / 2) - R_nicsConstant / 2));
-
-    //If the current position is close enough to where we want to go (within one tolerance value)...
-    if (IsAtPositionWithinTolerance(positionToAssume)) {
-
-        //Stop rotating the swerve motor and skip checking anything else...
-        m_swerveMotor->Set(0);
+        SetSwerveSpeed();
         return true;
-    }
-    //If the position to assume is greater than half a revolution...
-    else if (abs(positionToAssume - currentPosition) > R_nicsConstant / 2) {
-
-        //If such a rotation needs to be clockwise...
-        if (positionToAssume < currentPosition) {
-
-            //Set the speed of the motor using the Nic's Constant distance between the two points...
-            m_swerveMotor->Set(calculateAssumePositionSpeed(R_nicsConstant - (currentPosition - positionToAssume)));
-        }
-        //If such a rotation needs to be counterclockwise...
-        else if (positionToAssume > currentPosition) {
-
-            //Set the speed similarly, but negatively...
-            m_swerveMotor->Set(calculateAssumePositionSpeed(-R_nicsConstant + (positionToAssume - currentPosition)));
-        }
     }
     else {
 
-        //Otherwise, perform a normal between two points rotation with a Nic's Constant value.
-        m_swerveMotor->Set(calculateAssumePositionSpeed(positionToAssume - currentPosition));
+        double delta = modded - GetSwervePosition();
+        if (abs(delta) > R_nicsConstant / 2.0) {
+
+            SetSwerveSpeed(calculateAssumePositionSpeed(R_nicsConstant - abs(delta)) * (delta / abs(delta)));
+        }
+        else {
+
+            SetSwerveSpeed(calculateAssumePositionSpeed(delta));
+        }
+
+        return false;
     }
-    return false;
 }
 
 bool SwerveModule::AssumeSwerveZeroPosition() {
 
-    return AssumeSwervePosition(getSwerveNearestZeroPosition());
+    return AssumeSwervePosition(0);
 }
 
 bool SwerveModule::IsAtPositionWithinTolerance(const double &position) {
 
     //If the current position is close enough to where we want to go (within one tolerance value)...
-    return abs(abs(fmod(abs(position - GetSwervePositionSingleRotation()), R_nicsConstant) - R_nicsConstant / 2) - R_nicsConstant / 2) < R_swerveTrainAssumePositionTolerance;
+    return false;
 }
 
 double SwerveModule::calculateAssumePositionSpeed(const double &howFarRemainingInTravel) {
@@ -181,20 +156,4 @@ double SwerveModule::calculateAssumePositionSpeed(const double &howFarRemainingI
         toReturn = -toReturn;
     }
     return toReturn;
-}
-
-double SwerveModule::getSwerveNearestZeroPosition() {	
-
-    //If a full rotation minus the curent position is less than half of Nic's Constant,	
-    //the position is within the second or third quadrant, so a rotation to	
-    //Nic's Constant is the fastest path...	
-    if (R_nicsConstant - GetSwervePositionSingleRotation() < (R_nicsConstant / 2)) {	
-
-        return R_nicsConstant;	
-    }	
-    //Otherwise, going to 0 from the first or second quadrant is going to be faster.	
-    else {	
-
-        return 0;	
-    }	
 }

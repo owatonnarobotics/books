@@ -93,17 +93,14 @@ class SwerveModule {
         double GetSwervePosition();
 
         /**
-         * Gets the REV revolution position of the swerve motor as an
-         * equivalent value inside of one rotation.
+         * Converts a +/- swerve position to a range of 0 to Nic's Constant.
          * 
-         * Returns the REV revolution position of the swerve motor as an
-         * equivalent value inside of one rotation (only from 0 to Nic's
-         * Constant). For example, a position value equivalent to 1.5 Nic's
-         * Constants will return a half of Nic's Constant.
+         * Example: -R_nicsConstant / 4 -> R_nicsConstant * 3 / 4.
          *
-         * @return The position
+         * @param position The position to convert
+         * @return The position in a range from 0 to Nic's Constant
          */
-        double GetSwervePositionSingleRotation();
+        double SingleNicFromPosition(const double position);
 
         /**
          * Returns the zero position of the swerve encoder (whatever the value of
@@ -182,7 +179,6 @@ class SwerveModule {
          * @return The speed
          */
         double calculateAssumePositionSpeed(const double &howFarRemainingInTravel);
-        double getSwerveNearestZeroPosition();
 
         rev::CANSparkMax *m_driveMotor;
         rev::CANEncoder *m_driveMotorEncoder;

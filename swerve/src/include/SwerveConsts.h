@@ -11,7 +11,7 @@ const double R_kuhnsConstant = 8.312033026;
 //is the radian measure between the y-axis and the front right wheel. This is
 //the basic unit of a non-moving center turn, and it is modified as the basis
 //for moving and turning at the same time.
-const double R_angleFromCenterToFrontLeftWheel = 45.;
+const double R_angleFromCenterToFrontLeftWheel = 45.0;
 const double R_angleFromCenterToFrontRightWheel = 315.;
 const double R_angleFromCenterToRearLeftWheel = 135.;
 const double R_angleFromCenterToRearRightWheel = 225.;
@@ -23,12 +23,6 @@ const double R_swerveTrainAssumePositionSpeedCalculationFirstEndBehaviorAt = 3.5
 const double R_swerveTrainAssumePositionSpeedCalculationFirstEndBehaviorSpeed = .2;
 const double R_swerveTrainAssumePositionSpeedCalculationSecondEndBehaviorAt = 1;
 const double R_swerveTrainAssumePositionSpeedCalculationSecondEndBehaviorSpeed = .02;
-
-const double R_swerveTrainLimelightLockTolerance = 1;
-const double R_swerveTrainLimelightLockPositionSpeedCalculatonFirstEndBehaviorAt = 5.0;
-const double R_swerveTrainLimelightLockPositionSpeedCalculatonFirstEndBehaviorSpeed = .05;
-const double R_swerveTrainLimelightLockPositionSpeedCalculatonSecondEndBehaviorAt = 2.5;
-const double R_swerveTrainLimelightLockPositionSpeedCalculatonSecondEndBehaviorSpeed = .025;
 
 const double R_swerveTrainHoldAngleTolerance = 1.0;
 const double R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorAt = 10.0;
