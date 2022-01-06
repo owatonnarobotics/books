@@ -55,8 +55,8 @@ void SwerveTrain::SetSwerveBrake(const bool &brake) {
 
 void SwerveTrain::Stop() {
 
-    SetDriveSpeed();
-    SetSwerveSpeed();
+    SetDriveSpeed(0);
+    SetSwerveSpeed(0);
 }
 
 void SwerveTrain::SetZeroPosition(const bool &verbose) {
@@ -65,22 +65,6 @@ void SwerveTrain::SetZeroPosition(const bool &verbose) {
     m_frontLeft->SetZeroPosition();
     m_rearLeft->SetZeroPosition();
     m_rearRight->SetZeroPosition();
-
-    if (verbose) {
-
-        frc::SmartDashboard::PutNumber("Zion::Swerve::0PosFR", m_frontRight->GetSwerveZeroPosition());
-        frc::SmartDashboard::PutNumber("Zion::Swerve::0PosFL", m_frontLeft->GetSwerveZeroPosition());
-        frc::SmartDashboard::PutNumber("Zion::Swerve::0PosRL", m_rearLeft->GetSwerveZeroPosition());
-        frc::SmartDashboard::PutNumber("Zion::Swerve::0PosRR", m_rearRight->GetSwerveZeroPosition());
-    }
-}
-
-void SwerveTrain::PrintDrivePositions() {
-
-    frc::SmartDashboard::PutNumber("Zion::Swerve::0PosFR", m_frontRight->GetDrivePosition());
-    frc::SmartDashboard::PutNumber("Zion::Swerve::0PosFL", m_frontLeft->GetDrivePosition());
-    frc::SmartDashboard::PutNumber("Zion::Swerve::0PosRL", m_rearLeft->GetDrivePosition());
-    frc::SmartDashboard::PutNumber("Zion::Swerve::0PosRR", m_rearRight->GetDrivePosition());
 }
 
 bool SwerveTrain::AssumeZeroPosition() {
@@ -108,19 +92,15 @@ bool SwerveTrain::SetZionMotorsToVector(VectorDouble &vectorToSet) {
     bool fl = m_frontLeft->AssumeSwervePosition(m_frontLeft->AbsoluteVectorToNics(vectorToSet, angle));
     bool rl = m_rearLeft->AssumeSwervePosition(m_rearLeft->AbsoluteVectorToNics(vectorToSet, angle));
     bool rr = m_rearRight->AssumeSwervePosition(m_rearRight->AbsoluteVectorToNics(vectorToSet, angle));
-    frc::SmartDashboard::PutBoolean("fr at vector", fr);
-    frc::SmartDashboard::PutBoolean("fl at vector", fl);
-    frc::SmartDashboard::PutBoolean("rl at vector", rl);
-    frc::SmartDashboard::PutBoolean("rr at vector", rr);
     return  fr && fl && rl && rr;
 }
 
-void SwerveTrain::PrintSwervePositions() {
+void SwerveTrain::DebugSwerveModules() {
 
-    frc::SmartDashboard::PutNumber("Zion::Swerve::PosFR", m_frontRight->GetSwervePosition());
-    frc::SmartDashboard::PutNumber("Zion::Swerve::PosFL", m_frontLeft->GetSwervePosition());
-    frc::SmartDashboard::PutNumber("Zion::Swerve::PosRL", m_rearLeft->GetSwervePosition());
-    frc::SmartDashboard::PutNumber("Zion::Swerve::PosRR", m_rearRight->GetSwervePosition());
+    m_frontRight->Debug("FR");
+    m_frontLeft->Debug("FL");
+    m_rearLeft->Debug("RL");
+    m_rearRight->Debug("RR");
 }
 
 void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, const bool &precision, const bool &relative, const bool &hold, const double throttle) {

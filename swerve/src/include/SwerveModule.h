@@ -97,10 +97,10 @@ class SwerveModule {
          * 
          * Example: -R_nicsConstant / 4 -> R_nicsConstant * 3 / 4.
          *
-         * @param position The position to convert
+         * @param nics The value to convert
          * @return The position in a range from 0 to Nic's Constant
          */
-        double SingleNicFromPosition(const double position);
+        double SingleNic(const double nics);
 
         /**
          * Returns the zero position of the swerve encoder (whatever the value of
@@ -143,7 +143,7 @@ class SwerveModule {
          * @param positionToAssume The position to set the swerve module to
          * @return Whether or not the swerve module is at the position
          */
-        bool AssumeSwervePosition(const double &positionToAssumeRaw);
+        bool AssumeSwervePosition(const double &positionToAssumeRaw, bool log = false);
 
         /**
          * Drives the swerve to the current value of the swerve's zero position
@@ -154,12 +154,15 @@ class SwerveModule {
         bool AssumeSwerveZeroPosition();
 
         /**
-         * Get whether or not a certain nics value is within the position tolerance.
+         * @brief Publishes data to the SmartDashboard about the swerve module
          * 
-         * @param position The position in nics to test
-         * @return whether or not a certain nics value is within the position tolerance
+         * Publishes many different points of data to the SmartDashboard at the
+         * same time; this is so that if other modules are debugged as well,
+         * each module's data will be grouped.
+         * 
+         * @param header the string to print before each data poin
          */
-        bool IsAtPositionWithinTolerance(const double &position);
+        void Debug(std::string header);
 
     private:
         /**
@@ -186,4 +189,5 @@ class SwerveModule {
         rev::CANEncoder *m_swerveMotorEncoder;
 
         double m_swerveZeroPosition;
+        double m_lastSwerveSpeedSet;
 };

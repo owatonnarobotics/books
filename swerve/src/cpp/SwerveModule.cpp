@@ -12,11 +12,14 @@ SwerveModule::SwerveModule(const int &canDriveID, const int &canSwerveID) {
 
     //Default the swerve's zero position to its power-on position.
     m_swerveZeroPosition = m_swerveMotorEncoder->GetPosition();
+    m_lastSwerveSpeedSet = 0;
 
     //Allow the drive motor to coast, but brake the swerve motor for accuracy.
     //These must be set as they become overwritten from code.
     m_driveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
     m_swerveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+    Stop();
 }
 
 void SwerveModule::SetDriveSpeed(const double &speedToSet) {
@@ -27,6 +30,7 @@ void SwerveModule::SetDriveSpeed(const double &speedToSet) {
 void SwerveModule::SetSwerveSpeed(const double &speedToSet) {
 
     m_swerveMotor->Set(speedToSet);
+    m_lastSwerveSpeedSet = speedToSet;
 }
 
 void SwerveModule::SetDriveBrake(const bool &brake) {
@@ -55,8 +59,8 @@ void SwerveModule::SetSwerveBrake(const bool &brake) {
 
 void SwerveModule::Stop() {
 
-    SetDriveSpeed();
-    SetSwerveSpeed();
+    SetDriveSpeed(0);
+    SetSwerveSpeed(0);
 }
 
 void SwerveModule::SetZeroPosition() {
@@ -73,17 +77,13 @@ double SwerveModule::GetDrivePosition() {
 // the relative position of the swerve.
 double SwerveModule::GetSwervePosition() {
 
-    return SingleNicFromPosition(m_swerveMotorEncoder->GetPosition() - GetSwerveZeroPosition());
+    return SingleNic(m_swerveMotorEncoder->GetPosition() - m_swerveZeroPosition);
 }
 
-double SwerveModule::SingleNicFromPosition(const double position) {
+// Maps any multiple of a nic to a nic in the range of 0-nic. If the value is 
+double SwerveModule::SingleNic(const double nics) {
 
-    return fmod(position - GetSwerveZeroPosition(), R_nicsConstant) + (position < 0 ? R_nicsConstant : 0);
-}
-
-double SwerveModule::GetSwerveZeroPosition() {
-
-    return m_swerveZeroPosition;
+    return fmod(nics, R_nicsConstant) + (nics < 0 ? R_nicsConstant : 0);
 }
 
 double SwerveModule::GetDriveSpeed() {
@@ -98,30 +98,40 @@ double SwerveModule::GetSwerveSpeed() {
 
 double SwerveModule::AbsoluteVectorToNics(VectorDouble &vector, const double &angle) {
 
-    return R_nicsConstant * (vector.unitCircleAngleDeg() + angle - 90.) / 360.;
+    return R_nicsConstant * (vector.unitCircleAngleDeg() + angle - 90.0) / 360.0;
 }
 
-bool SwerveModule::AssumeSwervePosition(const double &positionToAssumeRaw) {
+bool SwerveModule::AssumeSwervePosition(const double &positionToAssumeRaw, bool log) {
 
-    double modded = SingleNicFromPosition(positionToAssumeRaw);
-    if (IsAtPositionWithinTolerance(modded)) {
+    double toCalculate = 0.0;
 
-        SetSwerveSpeed();
-        return true;
-    }
-    else {
+    double modded = SingleNic(positionToAssumeRaw);
+    double delta = modded - GetSwervePosition();
+    if (abs(delta) > R_nicsConstant / 2.0) {
 
-        double delta = modded - GetSwervePosition();
-        if (abs(delta) > R_nicsConstant / 2.0) {
+        if (delta > 0) {
 
-            SetSwerveSpeed(calculateAssumePositionSpeed(R_nicsConstant - abs(delta)) * (delta / abs(delta)));
+            toCalculate = -(R_nicsConstant - delta);
         }
         else {
 
-            SetSwerveSpeed(calculateAssumePositionSpeed(delta));
+            toCalculate = R_nicsConstant - (-delta);
         }
+    }
+    else {
 
+        toCalculate = delta;
+    }
+
+    if (abs(toCalculate) > R_swerveTrainAssumePositionTolerance) {
+
+        SetSwerveSpeed(calculateAssumePositionSpeed(toCalculate));
         return false;
+    }
+    else {
+
+        SetSwerveSpeed(0);
+        return true;
     }
 }
 
@@ -130,10 +140,12 @@ bool SwerveModule::AssumeSwerveZeroPosition() {
     return AssumeSwervePosition(0);
 }
 
-bool SwerveModule::IsAtPositionWithinTolerance(const double &position) {
+void SwerveModule::Debug(std::string header) {
 
-    //If the current position is close enough to where we want to go (within one tolerance value)...
-    return false;
+    frc::SmartDashboard::PutNumber(header + "_RawPosition", m_swerveMotorEncoder->GetPosition());
+    frc::SmartDashboard::PutNumber(header + "_ZeroPosition", m_swerveZeroPosition);
+    frc::SmartDashboard::PutNumber(header + "_RelativePosition", GetSwervePosition());
+    frc::SmartDashboard::PutNumber(header + "_LastSpeedSet", m_lastSwerveSpeedSet);
 }
 
 double SwerveModule::calculateAssumePositionSpeed(const double &howFarRemainingInTravel) {

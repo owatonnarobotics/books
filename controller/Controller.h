@@ -1,3 +1,6 @@
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+
 /*
 Public Function:
     void forceControllerXYZToZeroInDeadzone(const int&, const int&, const int&)
@@ -9,8 +12,9 @@ Public Function:
         makes strafing with a controller much more reliable.
 */
 
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#include <math.h>
+
+#include "controller/ControllerConsts.h"
 
 class Controller {
 

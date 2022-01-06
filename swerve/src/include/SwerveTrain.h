@@ -17,6 +17,9 @@ class SwerveTrain
 #include "swerve/src/include/SwerveModule.h"
 #include "vectors/VectorDouble.h"
 #include "recorder/Recorder.h"
+#include "commonauto/AsyncLoop.h"
+// #include "commonauto/steps/DriveStatic.h"
+// #include "commonauto/steps/WaitSeconds.h"
 
 class SwerveTrain {
 
@@ -29,7 +32,16 @@ class SwerveTrain {
          */
         static SwerveTrain& GetInstance() {
 
-            static SwerveTrain* instance = new SwerveTrain(0, 1, 2, 3, 4, 5, 6, 7);
+            static SwerveTrain* instance = new SwerveTrain(
+                R_CANIDZionFrontRightDrive,
+                R_CANIDZionFrontRightSwerve,
+                R_CANIDZionFrontLeftDrive,
+                R_CANIDZionFrontLeftSwerve,
+                R_CANIDZionRearLeftDrive,
+                R_CANIDZionRearLeftSwerve,
+                R_CANIDZionRearRightDrive,
+                R_CANIDZionRearRightSwerve
+            );
             return *instance;
         }
 
@@ -85,9 +97,9 @@ class SwerveTrain {
         bool AssumeZeroPosition();
 
         /**
-         * Puts the current swerve encoder positions to the SmartDashboard.
+         * Puts data about the swerve modules on the SmardDashboard.
          */
-        void PrintSwervePositions();
+        void DebugSwerveModules();
 
         /**
          * Drives the swere modules field oriented.
@@ -106,10 +118,109 @@ class SwerveTrain {
          */
         void Drive(const double &x, const double &y, const double rawZ, const bool &precision, const bool &relative, const bool &hold, const double throttle = 1.0);
 
-        /**
-         * Prints the positions of the drive motors to the SmartDashboard.
-         */
-        void PrintDrivePositions();
+        void DriveForward() {
+
+            Drive(0, 1.0, 0, false, false, false, 0.25);
+        }
+
+        void DriveBackward() {
+
+            Drive(0, -1, 0, false, false, false, 0.25);
+        }
+
+        void DriveLeft() {
+
+            Drive(-1, 0, 0, false, false, false, 0.25);
+        }
+
+        void DriveRight() {
+
+            Drive(1, 0, 0, false, false, false, 0.25);
+        }
+
+        void DriveSpinClockwise() {
+
+            Drive(0, 0, 1, false, false, false, 0.25);
+        }
+
+        void DriveSpinCounterclockwise() {
+            
+            Drive(0, 0, -1, false, false, false, 0.25);
+        }
+
+        void DriveForwardFixed() {
+
+            double start = frc::GetTime();
+            while (frc::GetTime() - start < 2) {
+
+                DriveForward();
+            }
+            Stop();
+        }
+
+        void DriveBackwardFixed() {
+
+            double start = frc::GetTime();
+            while (frc::GetTime() - start < 2) {
+            
+                DriveBackward();
+            }
+            Stop();
+        }
+
+        void DriveLeftFixed() {
+
+            double start = frc::GetTime();
+            while (frc::GetTime() - start < 2) {
+                
+                DriveLeft();
+            }
+            Stop();
+        }
+
+        void DriveRightFixed() {
+
+            double start = frc::GetTime();
+            while (frc::GetTime() - start < 2) {
+                
+                DriveRight();
+            }
+            Stop();
+        }
+
+        void DriveSpinClockwiseFixed() {
+
+            double start = frc::GetTime();
+            while (frc::GetTime() - start < 2) {
+                
+                DriveSpinClockwise();
+            }
+            Stop();
+        }
+
+        void DriveSpinCounterclockwiseFixed() {
+
+            double start = frc::GetTime();
+            while (frc::GetTime() - start < 2) {
+            
+                DriveSpinCounterclockwise();
+            }
+            Stop();
+        }
+
+        void AssumeZeroPositionForever() {
+
+            while (true) {
+
+                AssumeZeroPosition();
+            }
+        }
+
+        void WaitASecond() {
+
+            double start = frc::GetTime();
+            while (frc::GetTime() - start < 1);
+        }
 
         SwerveModule *m_frontRight;
         SwerveModule *m_frontLeft;
@@ -143,14 +254,14 @@ class SwerveTrain {
          * 
          * @param driveSpeed The speed to set
          */
-        void SetDriveSpeed(const double &driveSpeed = 0);
+        void SetDriveSpeed(const double &driveSpeed);
 
         /**
          * Sets a speed to all swerve motors on the train. Defaults to zero.
          * 
          * @param swerveSpeed The speed to set
          */
-        void SetSwerveSpeed(const double &swerveSpeed = 0);
+        void SetSwerveSpeed(const double &swerveSpeed);
 
         /**
          * Drives the swerves to thier turn around center positions.

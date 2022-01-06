@@ -1,5 +1,25 @@
 #pragma once
 
+/*_____RoboRIO CAN Bus ID Declarations_____*/
+const int R_CANIDZionFrontRightSwerve = 1;
+const int R_CANIDZionFrontRightDrive  = 2;
+const int R_CANIDZionFrontLeftSwerve  = 3;
+const int R_CANIDZionFrontLeftDrive   = 4;
+const int R_CANIDZionRearLeftDrive    = 5;
+const int R_CANIDZionRearLeftSwerve   = 6;
+const int R_CANIDZionRearRightDrive   = 7;
+const int R_CANIDZionRearRightSwerve  = 8;
+
+const int R_CANIDMotorIntake = 9;
+
+const int R_CANIDMotorLauncherIndex  = 10;
+const int R_CANIDMotorLauncherLaunchOne = 11;
+const int R_CANIDMotorLauncherLaunchTwo = 12;
+
+const int R_CANIDMotorClimberForward = 14;
+const int R_CANIDMotorClimberRear = 13;
+/*___End RoboRIO CAN Bus ID Declarations___*/
+
 //The amount of REV rotations it takes for a swerve assembly to make a full rotation.
 //Often, a REV Rotation is referred to as a Nic, although they mean different things.
 //Truly, a Nic is ~17.976 REV Rotation values.
