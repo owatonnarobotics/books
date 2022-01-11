@@ -41,13 +41,15 @@ class Recorder {
                 //myFile.flush();
                 if (myFile.is_open()) {
                 
-                    frc::DriverStation::ReportError("About to write "/*the following to \"" + fullPath + "\": " + logAsStr + " with "*/ + std::to_string(m_counter) + " updates");
+                    // TODO: Find replacement for deprecated DriverStation::ReportError
+                    // frc::DriverStation::ReportError("About to write "/*the following to \"" + fullPath + "\": " + logAsStr + " with "*/ + std::to_string(m_counter) + " updates");
                     myFile << logAsStr;
                     myFile.close();
                 }
                 else {
 
-                    frc::DriverStation::ReportError("Unable to open " + fullPath + " for recording");
+                    // TODO: Find replacement for deprecated DriverStation::ReportError
+                    // frc::DriverStation::ReportError("Unable to open " + fullPath + " for recording");
                 }
                 frc::SmartDashboard::PutString("Recorder::output_file::" + outputString, logAsStr);
                 m_log.str("");

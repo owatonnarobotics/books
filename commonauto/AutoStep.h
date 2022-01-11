@@ -17,7 +17,8 @@ class AutoStep {
 
         void Log(std::string message) {
 
-            frc::DriverStation::ReportError(message);
+            // TODO: Find replacement for deprecated DriverStation::ReportError
+            // frc::DriverStation::ReportError(message);
         }
 
     private:

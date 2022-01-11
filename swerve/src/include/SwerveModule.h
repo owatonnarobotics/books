@@ -6,7 +6,7 @@ class SwerveModule
 
 #include <math.h>
 
-#include "rev/CANSparkMax.h"
+#include "ctre/Phoenix.h"
 
 #include "swerve/src/include/SwerveConsts.h"
 #include "vectors/VectorDouble.h"
@@ -23,8 +23,9 @@ class SwerveModule {
          * 
          * @param canDriveID The ID of the drive motor's Spark MAX on the bus
          * @param canSwerveID The ID of the swerve motor's Spark MAX on the bus
+         * @param canEncoderID The ID of the Encoder on da bus
          */
-        SwerveModule(const int &canDriveID, const int &canSwerveID);
+        SwerveModule(const int &canDriveID, const int &canSwerveID, const int &canEncoderID);
 
         /**
          * Sets the driving speed to a double. Defaults to zero.
@@ -39,28 +40,6 @@ class SwerveModule {
          * @param speedToSet The speed to set
          */
         void SetSwerveSpeed(const double &speedToSet = 0);
-
-        /**
-         * Sets the drive motor's brake mode.
-         * 
-         * If true, sets the swerve to brake mode, if false, to coast mode.
-         * This is used in SwerveTrain to allow "unlocking" the swerve wheels
-         * for zeroing by overriding the default brake initialization.
-         * 
-         * @param brake Whether or not to set the brake
-         */
-        void SetDriveBrake(const bool &brake);
-
-        /**
-         * Sets the swerve motor's brake mode.
-         * 
-         * Same as above for swerve. This is used to
-         * "unlock and lock" all of the swerve wheels for easy manual zeroing,
-         * instead of fighting the wheel brake as defaultly constructed.
-         * 
-         * @param brake Whether or not to set the brake
-         */
-        void SetSwerveBrake(const bool &brake);
         
         /**
          * Stops the swerve and drive motors.
@@ -183,10 +162,10 @@ class SwerveModule {
          */
         double calculateAssumePositionSpeed(const double &howFarRemainingInTravel);
 
-        rev::CANSparkMax *m_driveMotor;
-        rev::CANEncoder *m_driveMotorEncoder;
-        rev::CANSparkMax *m_swerveMotor;
-        rev::CANEncoder *m_swerveMotorEncoder;
+        ctre::phoenix::motorcontrol::can::TalonFX *m_driveMotor;
+        ctre::phoenix::sensors::CANCoder *m_driveMotorEncoder;
+        ctre::phoenix::motorcontrol::can::TalonFX *m_swerveMotor;
+        ctre::phoenix::sensors::CANCoder *m_swerveMotorEncoder;
 
         double m_swerveZeroPosition;
         double m_lastSwerveSpeedSet;

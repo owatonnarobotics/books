@@ -128,5 +128,5 @@ class Limelight {
         Limelight(Limelight&&) = delete;
         Limelight& operator = (Limelight&&) = delete;
 
-        std::shared_ptr<NetworkTable> table;
+        std::shared_ptr<nt::NetworkTable> table;
 };

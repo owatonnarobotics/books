@@ -3,58 +3,34 @@
 
 #include "swerve/src/include/SwerveModule.h"
 
-SwerveModule::SwerveModule(const int &canDriveID, const int &canSwerveID) {
+SwerveModule::SwerveModule(const int &canDriveID, const int &canSwerveID, const int &canEncoderID) {
 
-    m_driveMotor = new rev::CANSparkMax(canDriveID, rev::CANSparkMax::MotorType::kBrushless);
-    m_driveMotorEncoder = new rev::CANEncoder(m_driveMotor->GetEncoder());
-    m_swerveMotor = new rev::CANSparkMax(canSwerveID, rev::CANSparkMax::MotorType::kBrushless);
-    m_swerveMotorEncoder = new rev::CANEncoder(m_swerveMotor->GetEncoder());
+    m_driveMotor = new ctre::phoenix::motorcontrol::can::TalonFX(canDriveID);
+    // TODO: This is 13 for all SwerveModules because no CANCoders are
+    // installed on the drive motors.
+    m_driveMotorEncoder = new ctre::phoenix::sensors::CANCoder(13);
+    m_swerveMotor = new ctre::phoenix::motorcontrol::can::TalonFX(canSwerveID);
+    m_swerveMotorEncoder = new ctre::phoenix::sensors::CANCoder(canEncoderID);
+
+    m_driveMotorEncoder->ConfigFeedbackCoefficient(R_CANCoderMaxDefaultValue / R_nicsConstant, "spmxs", ctre::phoenix::sensors::SensorTimeBase::PerSecond);
+    m_swerveMotorEncoder->ConfigFeedbackCoefficient(R_CANCoderMaxDefaultValue / R_nicsConstant, "spmxs", ctre::phoenix::sensors::SensorTimeBase::PerSecond);
 
     //Default the swerve's zero position to its power-on position.
     m_swerveZeroPosition = m_swerveMotorEncoder->GetPosition();
     m_lastSwerveSpeedSet = 0;
-
-    //Allow the drive motor to coast, but brake the swerve motor for accuracy.
-    //These must be set as they become overwritten from code.
-    m_driveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-    m_swerveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     Stop();
 }
 
 void SwerveModule::SetDriveSpeed(const double &speedToSet) {
 
-    m_driveMotor->Set(speedToSet);
+    m_driveMotor->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speedToSet);
 }
 
 void SwerveModule::SetSwerveSpeed(const double &speedToSet) {
 
-    m_swerveMotor->Set(speedToSet);
+    m_swerveMotor->Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speedToSet);
     m_lastSwerveSpeedSet = speedToSet;
-}
-
-void SwerveModule::SetDriveBrake(const bool &brake) {
-
-    if (brake) {
-
-        m_driveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    }
-    else {
-
-        m_driveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-    }
-}
-
-void SwerveModule::SetSwerveBrake(const bool &brake) {
-
-    if (brake) {
-
-        m_swerveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    }
-    else {
-
-        m_swerveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-    }
 }
 
 void SwerveModule::Stop() {
@@ -142,8 +118,10 @@ bool SwerveModule::AssumeSwerveZeroPosition() {
 
 void SwerveModule::Debug(std::string header) {
 
-    frc::SmartDashboard::PutNumber(header + "_RawPosition", m_swerveMotorEncoder->GetPosition());
+    frc::SmartDashboard::PutNumber(header + "_GetPosition", m_swerveMotorEncoder->GetPosition());
+    frc::SmartDashboard::PutNumber(header + "_OffsetFromZeroPosition", m_swerveMotorEncoder->GetPosition() - m_swerveZeroPosition);
     frc::SmartDashboard::PutNumber(header + "_ZeroPosition", m_swerveZeroPosition);
+    frc::SmartDashboard::PutNumber(header + "_GetAbsolutePosition", m_swerveMotorEncoder->GetAbsolutePosition());
     frc::SmartDashboard::PutNumber(header + "_RelativePosition", GetSwervePosition());
     frc::SmartDashboard::PutNumber(header + "_LastSpeedSet", m_lastSwerveSpeedSet);
 }

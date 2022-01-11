@@ -1,25 +1,23 @@
 #pragma once
 
 /*_____RoboRIO CAN Bus ID Declarations_____*/
-const int R_CANIDZionFrontRightSwerve = 1;
-const int R_CANIDZionFrontRightDrive  = 2;
-const int R_CANIDZionFrontLeftSwerve  = 3;
-const int R_CANIDZionFrontLeftDrive   = 4;
-const int R_CANIDZionRearLeftDrive    = 5;
-const int R_CANIDZionRearLeftSwerve   = 6;
-const int R_CANIDZionRearRightDrive   = 7;
-const int R_CANIDZionRearRightSwerve  = 8;
+const int R_CANIDZionFrontRightSwerve = 7;
+const int R_CANIDZionFrontRightDrive  = 8;
+const int R_CANIDZionFrontLeftSwerve  = 1;
+const int R_CANIDZionFrontLeftDrive   = 2;
+const int R_CANIDZionRearLeftSwerve   = 3;
+const int R_CANIDZionRearLeftDrive    = 4;
+const int R_CANIDZionRearRightSwerve  = 5;
+const int R_CANIDZionRearRightDrive   = 6;
 
-const int R_CANIDMotorIntake = 9;
-
-const int R_CANIDMotorLauncherIndex  = 10;
-const int R_CANIDMotorLauncherLaunchOne = 11;
-const int R_CANIDMotorLauncherLaunchTwo = 12;
-
-const int R_CANIDMotorClimberForward = 14;
-const int R_CANIDMotorClimberRear = 13;
+const int R_CANIDZionFrontRightEncoder = 12;
+const int R_CANIDZionFrontLeftEncoder = 9;
+const int R_CANIDZionRearLeftEncoder = 10;
+const int R_CANIDZionRearRightEncoder = 12;
 /*___End RoboRIO CAN Bus ID Declarations___*/
 
+// The CANCoder's default encoder max 12-bit value
+const unsigned int R_CANCoderMaxDefaultValue = 4096;
 //The amount of REV rotations it takes for a swerve assembly to make a full rotation.
 //Often, a REV Rotation is referred to as a Nic, although they mean different things.
 //Truly, a Nic is ~17.976 REV Rotation values.

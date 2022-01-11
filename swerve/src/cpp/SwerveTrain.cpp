@@ -7,18 +7,22 @@
 SwerveTrain::SwerveTrain(
         const int frontRightCANDriveID,
         const int frontRightCANSwerveID,
+        const int frontRightCANEncoderID,
         const int frontLeftCANDriveID,
         const int frontLeftCANSwerveID,
+        const int frontLeftCANEncoderID,
         const int rearLeftCANDriveID,
         const int rearLeftCANSwerveID,
+        const int rearLeftCANEncoderID,
         const int rearRightCANDriveID,
-        const int rearRightCANSwerveID
+        const int rearRightCANSwerveID,
+        const int rearRightCANEncoderID
     ) {
 
-    m_frontRight = new SwerveModule(frontRightCANDriveID, frontRightCANSwerveID);
-    m_frontLeft = new SwerveModule(frontLeftCANDriveID, frontLeftCANSwerveID);
-    m_rearLeft = new SwerveModule(rearLeftCANDriveID, rearLeftCANSwerveID);
-    m_rearRight = new SwerveModule(rearRightCANDriveID, rearRightCANSwerveID);
+    m_frontRight = new SwerveModule(frontRightCANDriveID, frontRightCANSwerveID, frontRightCANEncoderID);
+    m_frontLeft = new SwerveModule(frontLeftCANDriveID, frontLeftCANSwerveID, frontLeftCANEncoderID);
+    m_rearLeft = new SwerveModule(rearLeftCANDriveID, rearLeftCANSwerveID, rearLeftCANEncoderID);
+    m_rearRight = new SwerveModule(rearRightCANDriveID, rearRightCANSwerveID, rearRightCANEncoderID);
 }
 
 void SwerveTrain::SetDriveSpeed(const double &driveSpeed) {
@@ -35,22 +39,6 @@ void SwerveTrain::SetSwerveSpeed(const double &swerveSpeed) {
     m_frontLeft->SetSwerveSpeed(swerveSpeed);
     m_rearLeft->SetSwerveSpeed(swerveSpeed);
     m_rearRight->SetSwerveSpeed(swerveSpeed);
-}
-
-void SwerveTrain::SetDriveBrake(const bool &brake) {
-
-    m_frontRight->SetDriveBrake(brake);
-    m_frontLeft->SetDriveBrake(brake);
-    m_rearLeft->SetDriveBrake(brake);
-    m_rearRight->SetDriveBrake(brake);
-}
-
-void SwerveTrain::SetSwerveBrake(const bool &brake) {
-
-    m_frontRight->SetSwerveBrake(brake);
-    m_frontLeft->SetSwerveBrake(brake);
-    m_rearLeft->SetSwerveBrake(brake);
-    m_rearRight->SetSwerveBrake(brake);
 }
 
 void SwerveTrain::Stop() {
@@ -106,7 +94,6 @@ void SwerveTrain::DebugSwerveModules() {
 void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, const bool &precision, const bool &relative, const bool &hold, const double throttle) {
 
     static double holdAngle = 0.0;
-    static bool wasHolding = false;
 
     frc::SmartDashboard::PutNumber("Throttle", throttle);
 

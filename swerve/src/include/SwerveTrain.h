@@ -11,7 +11,7 @@ class SwerveTrain
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include "rev/CANSparkMax.h"
+#include "ctre/Phoenix.h"
 
 #include "navX/NavX.h"
 #include "swerve/src/include/SwerveModule.h"
@@ -35,38 +35,19 @@ class SwerveTrain {
             static SwerveTrain* instance = new SwerveTrain(
                 R_CANIDZionFrontRightDrive,
                 R_CANIDZionFrontRightSwerve,
+                R_CANIDZionFrontRightEncoder,
                 R_CANIDZionFrontLeftDrive,
                 R_CANIDZionFrontLeftSwerve,
+                R_CANIDZionFrontLeftEncoder,
                 R_CANIDZionRearLeftDrive,
                 R_CANIDZionRearLeftSwerve,
+                R_CANIDZionRearLeftEncoder,
                 R_CANIDZionRearRightDrive,
-                R_CANIDZionRearRightSwerve
+                R_CANIDZionRearRightSwerve,
+                R_CANIDZionRearRightEncoder
             );
             return *instance;
         }
-
-        /**
-         * 
-         * Sets the drive motor's brake mode.
-         * 
-         * If true, sets the drives to brake mode (as defaultly constructed),
-         * if false, sets them to coast. Persists across calls. This is used in
-         * the autonomous to allow the swervetrain to Stop very precisely.
-         * 
-         * @param brake Whether or not to set the brake
-         */
-        void SetDriveBrake(const bool &brake);
-
-        /**
-         * Sets the swerve motor's brake mode.
-         * 
-         * Same as above for swerve. This is used to
-         * "unlock and lock" all of the swerve wheels for easy manual zeroing,
-         * instead of fighting the wheel brake as defaultly constructed.
-         * 
-         * @param brake Whether or not to set the brake
-         */
-        void SetSwerveBrake(const bool &brake);
 
         /**
          * Stops all swerve at drive motors.
@@ -118,110 +99,6 @@ class SwerveTrain {
          */
         void Drive(const double &x, const double &y, const double rawZ, const bool &precision, const bool &relative, const bool &hold, const double throttle = 1.0);
 
-        void DriveForward() {
-
-            Drive(0, 1.0, 0, false, false, false, 0.25);
-        }
-
-        void DriveBackward() {
-
-            Drive(0, -1, 0, false, false, false, 0.25);
-        }
-
-        void DriveLeft() {
-
-            Drive(-1, 0, 0, false, false, false, 0.25);
-        }
-
-        void DriveRight() {
-
-            Drive(1, 0, 0, false, false, false, 0.25);
-        }
-
-        void DriveSpinClockwise() {
-
-            Drive(0, 0, 1, false, false, false, 0.25);
-        }
-
-        void DriveSpinCounterclockwise() {
-            
-            Drive(0, 0, -1, false, false, false, 0.25);
-        }
-
-        void DriveForwardFixed() {
-
-            double start = frc::GetTime();
-            while (frc::GetTime() - start < 2) {
-
-                DriveForward();
-            }
-            Stop();
-        }
-
-        void DriveBackwardFixed() {
-
-            double start = frc::GetTime();
-            while (frc::GetTime() - start < 2) {
-            
-                DriveBackward();
-            }
-            Stop();
-        }
-
-        void DriveLeftFixed() {
-
-            double start = frc::GetTime();
-            while (frc::GetTime() - start < 2) {
-                
-                DriveLeft();
-            }
-            Stop();
-        }
-
-        void DriveRightFixed() {
-
-            double start = frc::GetTime();
-            while (frc::GetTime() - start < 2) {
-                
-                DriveRight();
-            }
-            Stop();
-        }
-
-        void DriveSpinClockwiseFixed() {
-
-            double start = frc::GetTime();
-            while (frc::GetTime() - start < 2) {
-                
-                DriveSpinClockwise();
-            }
-            Stop();
-        }
-
-        void DriveSpinCounterclockwiseFixed() {
-
-            double start = frc::GetTime();
-            while (frc::GetTime() - start < 2) {
-            
-                DriveSpinCounterclockwise();
-            }
-            Stop();
-        }
-
-        void AssumeZeroPositionForever() {
-
-            while (true) {
-
-                AssumeZeroPosition();
-            }
-        }
-
-        void WaitASecond() {
-
-            double start = frc::GetTime();
-            while (frc::GetTime() - start < 1);
-        }
-
         SwerveModule *m_frontRight;
         SwerveModule *m_frontLeft;
         SwerveModule *m_rearLeft;
@@ -236,12 +113,16 @@ class SwerveTrain {
         SwerveTrain(
             const int frontRightCANDriveID,
             const int frontRightCANSwerveID,
+            const int frontRightCANEncoderID,
             const int frontLeftCANDriveID,
             const int frontLeftCANSwerveID,
+            const int frontLeftCANEncoderID,
             const int rearLeftCANDriveID,
             const int rearLeftCANSwerveID,
+            const int rearLeftCANEncoderID,
             const int rearRightCANDriveID,
-            const int rearRightCANSwerveID
+            const int rearRightCANSwerveID,
+            const int rearRightCANEncoderID
         );
 
         SwerveTrain(const SwerveTrain&) = delete;
