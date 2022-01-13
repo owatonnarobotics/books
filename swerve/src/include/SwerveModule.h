@@ -40,6 +40,34 @@ class SwerveModule {
          * @param speedToSet The speed to set
          */
         void SetSwerveSpeed(const double &speedToSet = 0);
+
+        /**
+         *
+         * Set the swerve motor neutral mode
+         * 
+         * @param brake whether or not to set the brake
+         */
+        void SetSwerveBrake(const bool brake) {
+
+            m_swerveMotor->SetNeutralMode(
+                brake ? 
+                ctre::phoenix::motorcontrol::NeutralMode::Brake : ctre::phoenix::motorcontrol::NeutralMode::Coast
+            );
+        }
+
+        /**
+         *
+         * Set the drive motor neutral mode
+         * 
+         * @param brake whether or not to set the brake
+         */
+        void SetDriveBrake(const bool brake) {
+
+            m_driveMotor->SetNeutralMode(
+                brake ? 
+                ctre::phoenix::motorcontrol::NeutralMode::Brake : ctre::phoenix::motorcontrol::NeutralMode::Coast
+            );
+        }
         
         /**
          * Stops the swerve and drive motors.

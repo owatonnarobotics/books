@@ -8,12 +8,12 @@ SwerveModule::SwerveModule(const int &canDriveID, const int &canSwerveID, const 
     m_driveMotor = new ctre::phoenix::motorcontrol::can::TalonFX(canDriveID);
     // TODO: This is 13 for all SwerveModules because no CANCoders are
     // installed on the drive motors.
-    m_driveMotorEncoder = new ctre::phoenix::sensors::CANCoder(13);
+    m_driveMotorEncoder = nullptr;//new ctre::phoenix::sensors::CANCoder(13);
     m_swerveMotor = new ctre::phoenix::motorcontrol::can::TalonFX(canSwerveID);
     m_swerveMotorEncoder = new ctre::phoenix::sensors::CANCoder(canEncoderID);
 
-    m_driveMotorEncoder->ConfigFeedbackCoefficient(R_CANCoderMaxDefaultValue / R_nicsConstant, "spmxs", ctre::phoenix::sensors::SensorTimeBase::PerSecond);
-    m_swerveMotorEncoder->ConfigFeedbackCoefficient(R_CANCoderMaxDefaultValue / R_nicsConstant, "spmxs", ctre::phoenix::sensors::SensorTimeBase::PerSecond);
+    // m_driveMotorEncoder->ConfigFeedbackCoefficient(R_CANCoderMaxDefaultValue / R_nicsConstant, "spmxs", ctre::phoenix::sensors::SensorTimeBase::PerSecond);
+    m_swerveMotorEncoder->ConfigFeedbackCoefficient(R_nicsConstant / R_CANCoderMaxDefaultValue, "spmxs", ctre::phoenix::sensors::SensorTimeBase::PerSecond);
 
     //Default the swerve's zero position to its power-on position.
     m_swerveZeroPosition = m_swerveMotorEncoder->GetPosition();
@@ -46,7 +46,7 @@ void SwerveModule::SetZeroPosition() {
 
 double SwerveModule::GetDrivePosition() {
 
-    return m_driveMotorEncoder->GetPosition();
+    return 0;//m_driveMotorEncoder->GetPosition();
 }
 
 // Initially, this function would return the raw encoder value. Now, it returns
@@ -64,7 +64,7 @@ double SwerveModule::SingleNic(const double nics) {
 
 double SwerveModule::GetDriveSpeed() {
 
-    return m_driveMotorEncoder->GetVelocity();
+    return 0;//m_driveMotorEncoder->GetVelocity();
 }
 
 double SwerveModule::GetSwerveSpeed() {

@@ -13,11 +13,11 @@ const int R_CANIDZionRearRightDrive   = 6;
 const int R_CANIDZionFrontRightEncoder = 12;
 const int R_CANIDZionFrontLeftEncoder = 9;
 const int R_CANIDZionRearLeftEncoder = 10;
-const int R_CANIDZionRearRightEncoder = 12;
+const int R_CANIDZionRearRightEncoder = 11;
 /*___End RoboRIO CAN Bus ID Declarations___*/
 
 // The CANCoder's default encoder max 12-bit value
-const unsigned int R_CANCoderMaxDefaultValue = 4096;
+const int R_CANCoderMaxDefaultValue = 4096;
 //The amount of REV rotations it takes for a swerve assembly to make a full rotation.
 //Often, a REV Rotation is referred to as a Nic, although they mean different things.
 //Truly, a Nic is ~17.976 REV Rotation values.
@@ -40,7 +40,7 @@ const double R_swerveTrainAssumePositionTolerance = .25;
 const double R_swerveTrainAssumePositionSpeedCalculationFirstEndBehaviorAt = 3.5;
 const double R_swerveTrainAssumePositionSpeedCalculationFirstEndBehaviorSpeed = .2;
 const double R_swerveTrainAssumePositionSpeedCalculationSecondEndBehaviorAt = 1;
-const double R_swerveTrainAssumePositionSpeedCalculationSecondEndBehaviorSpeed = .02;
+const double R_swerveTrainAssumePositionSpeedCalculationSecondEndBehaviorSpeed = .10;
 
 const double R_swerveTrainHoldAngleTolerance = 1.0;
 const double R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorAt = 10.0;

@@ -50,6 +50,34 @@ class SwerveTrain {
         }
 
         /**
+         *
+         * Set the all swerve motor neutral modes
+         * 
+         * @param brake whether or not to set the brake
+         */
+        void SetSwerveBrake(const bool brake) {
+
+            m_frontRight->SetSwerveBrake(brake);
+            m_frontLeft->SetSwerveBrake(brake);
+            m_rearLeft->SetSwerveBrake(brake);
+            m_rearRight->SetSwerveBrake(brake);
+        }
+
+        /**
+         *
+         * Set the all drive motor neutral modes
+         * 
+         * @param brake whether or not to set the brake
+         */
+        void SetDriveBrake(const bool brake) {
+
+            m_frontRight->SetDriveBrake(brake);
+            m_frontLeft->SetDriveBrake(brake);
+            m_rearLeft->SetDriveBrake(brake);
+            m_rearRight->SetDriveBrake(brake);
+        }
+
+        /**
          * Stops all swerve at drive motors.
          * 
          * Sets all swerve motors and drive motors to 0.
