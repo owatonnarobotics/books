@@ -3,7 +3,7 @@
 const int R_controllerPortPlayerOne = 0;
 const int R_controllerPortPlayerTwo = 1;
 const int R_controllerPortPlayerThree = 2;
-const int R_controllerPortGuitar = 5;
+const int R_controllerPortGuitar = 0;
 
 //This deadzone is used to determine when the controller is completely motionless
 const double R_deadzoneController = .15;
