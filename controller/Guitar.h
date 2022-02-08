@@ -13,43 +13,48 @@ class Guitar {
         Guitar(const int port) {
 
             m_controller = new frc::Joystick(port);
-            m_s_t = 0;
+            m_rate = 0;
         }
 
         void Update() {
 
             static frc::Timer timer;
+            static bool initialStart = false;
             static bool prev = false;
-            static bool toggle = false;
-            static double prevSt = 0;
             static int counter = 0;
 
-            bool current = !((m_controller->GetPOV(0) == -1) || (m_controller->GetPOV(0) == 270));
-            if (current && !prev) {
-                
-                double delta = timer.Get().value();
-                timer.Reset();
+            if (!initialStart) {
+
                 timer.Start();
-                double rate = delta != 0 ? 1.0 / delta : 0;
-                // s_t = s_t-1 + a * (x_t - s_t-1)
-                m_s_t = prevSt + R_smoothingFactor * (rate - prevSt);
+                initialStart = true;
             }
-            else if (timer.Get().value() >= 1.0) {
+
+            if (timer.Get().value() < R_samplingWindow) {
+                
+                bool current = !((m_controller->GetPOV(0) == -1) || (m_controller->GetPOV(0) == 270));
+                if (current && !prev) {
+                    
+                    counter++;
+                }
+                prev = current;
+            }
+            else {
 
                 timer.Reset();
                 timer.Start();
-                m_s_t = 0;
+                m_rate = counter;
+                counter = 0;
             }
-            prevSt = m_s_t;
-            prev = current;
+            frc::SmartDashboard::PutNumber("counter", counter);
         }
 
         double StrumVelocity() {
 
-            return m_s_t > 15.0 ? 1 : m_s_t / 15.0;
+            frc::SmartDashboard::PutNumber("m_rate", m_rate);
+            return m_rate > R_maxStrumsPerSecond * R_samplingWindow ? 1.0 : m_rate / ((double)R_maxStrumsPerSecond * R_samplingWindow);
         }
 
     private:
         frc::Joystick* m_controller;
-        double m_s_t;
+        double m_rate;
 };
