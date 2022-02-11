@@ -1,8 +1,9 @@
 #pragma once
 
-#include <frc/XboxController.h>
+#include <frc/Joystick.h>
 #include <frc/Errors.h>
 #include <frc/Timer.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "controller/ControllerConsts.h"
 
@@ -11,35 +12,49 @@ class Guitar {
     public:
         Guitar(const int port) {
 
-            m_controller = new frc::XboxController(port);
+            m_controller = new frc::Joystick(port);
             m_rate = 0;
         }
 
         void Update() {
 
             static frc::Timer timer;
+            static bool initialStart = false;
             static bool prev = false;
+            static int counter = 0;
 
-            bool current = m_controller->GetRawButton(0);
-            if (current && !prev) {
-                
-                units::time::second_t delta = timer.Get();
-                timer.Reset();
-                m_rate = 1.0 / delta.value();
+            if (!initialStart) {
+
+                timer.Start();
+                initialStart = true;
             }
-            prev = current;
+
+            if (timer.Get().value() < R_samplingWindow) {
+                
+                bool current = !((m_controller->GetPOV(0) == -1) || (m_controller->GetPOV(0) == 270));
+                if (current && !prev) {
+                    
+                    counter++;
+                }
+                prev = current;
+            }
+            else {
+
+                timer.Reset();
+                timer.Start();
+                m_rate = counter;
+                counter = 0;
+            }
+            frc::SmartDashboard::PutNumber("counter", counter);
         }
 
         double StrumVelocity() {
 
-            static double s_t = 0;
-
-            // s_t = s_t-1 + a * (x_t - s_t-1)
-            s_t = s_t + R_smoothingFactor * (m_rate - s_t);
-            return s_t;
+            frc::SmartDashboard::PutNumber("m_rate", m_rate);
+            return m_rate > R_maxStrumsPerSecond * R_samplingWindow ? 1.0 : m_rate / ((double)R_maxStrumsPerSecond * R_samplingWindow);
         }
 
     private:
-        frc::XboxController* m_controller;
+        frc::Joystick* m_controller;
         double m_rate;
 };

@@ -3,7 +3,7 @@
 const int R_controllerPortPlayerOne = 0;
 const int R_controllerPortPlayerTwo = 1;
 const int R_controllerPortPlayerThree = 2;
-const int R_controllerPortGuitar = 5;
+const int R_controllerPortGuitar = 0;
 
 //This deadzone is used to determine when the controller is completely motionless
 const double R_deadzoneController = .25;
@@ -12,4 +12,5 @@ const double R_deadzoneController = .25;
 //drift, it is significantly higher.
 const double R_deadzoneControllerZ = 0.15;
 
-const double R_smoothingFactor = 0.5;
+const int R_maxStrumsPerSecond = 10;
+const double R_samplingWindow = 1.0;
