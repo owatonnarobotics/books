@@ -42,7 +42,7 @@ class NavX {
 
         double getYaw() {
 
-            return navX->GetYaw();
+            return -navX->GetYaw();
         }
         double getYawFull(){
 
