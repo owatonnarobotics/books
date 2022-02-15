@@ -13,12 +13,12 @@ class WaitSeconds : public AutoStep {
 
         void Init() {
 
-            m_initialTime = frc::GetTime();
+            m_initialTime = frc::GetTime().value();
         }
 
         bool Execute() {
 
-            return frc::GetTime() - m_initialTime >= m_secondsToWait;
+            return frc::GetTime().value() - m_initialTime >= m_secondsToWait;
         }
 
     private:
