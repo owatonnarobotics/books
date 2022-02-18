@@ -32,6 +32,9 @@ Public Methods
 
 #include "AHRS.h"
 
+#include <frc/Errors.h>
+#include "logging/Logger.h"
+
 class NavX {
 
     public:
@@ -66,11 +69,24 @@ class NavX {
 
         void resetYaw() {
 
+            if (isCalibrating()) {
+                
+                FRC_ReportError(frc::warn::Warning, "Attempting to reset yaw... This might not work as the NavX is not calibrated yet! {}", -1);
+            }
+            else {
+
+                Log("Attempting to reset yaw");
+            }
             navX->ZeroYaw();
         }
         void resetAll() {
 
             navX->Reset();
+        }
+
+        bool isCalibrating() {
+
+            return navX->IsCalibrating();
         }
 
         enum ConnectionType {
@@ -102,4 +118,10 @@ class NavX {
         NavX& operator = (NavX&&) = delete;
 
         AHRS *navX;
+
+        void Log(std::string msg) {
+
+            std::vector<std::string> headers = {"NavX"};
+            Logger::Log(msg, headers);
+        }
 };

@@ -83,7 +83,16 @@ class SwerveModule {
          * as private of the class. This is the value the swerve motor returns
          * to when invoking AssumeSwerveZeroPosition().
          */
-        void SetZeroPosition();
+        void SetSoftwareZero();
+
+        /**
+         * Resets the encoders so that they output 0 at the current position.
+         * 
+         * This is a "hardware" zero, meaning that when the lowest level
+         * GetPosition function is called, 0 would be returned if the swerve
+         * module was at the current location.
+         */
+        void HardwareZero();
 
         /**
          * Get the total REV revolutions of the drive encoder.

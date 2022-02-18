@@ -21,6 +21,11 @@ class AutoStep {
             // frc::DriverStation::ReportError(message);
         }
 
+        std::string GetName() {
+
+            return m_name;
+        }
+
     private:
         std::string m_name;
 };

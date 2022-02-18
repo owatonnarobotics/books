@@ -27,7 +27,7 @@ class TimeDriveForwardHold : public AutoStep {
             }
             if (delta < m_totalTimeToDrive) {
 
-                SwerveTrain::GetInstance().Drive(0, 1, 0, false, true, true, speed);
+                SwerveTrain::GetInstance().Drive(0, 1, 0, false, true, true, speed * AUTO_EXECUTION_CAP);
                 return false;
             }
             else {

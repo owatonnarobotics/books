@@ -47,12 +47,22 @@ void SwerveTrain::Stop() {
     SetSwerveSpeed(0);
 }
 
-void SwerveTrain::SetZeroPosition(const bool &verbose) {
+void SwerveTrain::SetSoftwareZero(const bool &verbose) {
 
-    m_frontRight->SetZeroPosition();
-    m_frontLeft->SetZeroPosition();
-    m_rearLeft->SetZeroPosition();
-    m_rearRight->SetZeroPosition();
+    m_frontRight->SetSoftwareZero();
+    m_frontLeft->SetSoftwareZero();
+    m_rearLeft->SetSoftwareZero();
+    m_rearRight->SetSoftwareZero();
+    Log("Software zeroed");
+}
+
+void SwerveTrain::HardwareZero() {
+
+    m_frontRight->HardwareZero();
+    m_frontLeft->HardwareZero();
+    m_rearLeft->HardwareZero();
+    m_rearRight->HardwareZero();
+    Log("Hardware zeroed");
 }
 
 bool SwerveTrain::AssumeZeroPosition() {
@@ -239,4 +249,10 @@ void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, con
         m_rearLeft->SetDriveSpeed(rl);
         m_rearRight->SetDriveSpeed(rr);
     }
+}
+
+void SwerveTrain::Log(std::string msg) {
+
+    static std::vector<std::string> headers = {"SwerveTrain"};
+    Logger::Log(msg, headers);
 }

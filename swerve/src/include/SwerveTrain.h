@@ -18,8 +18,7 @@ class SwerveTrain
 #include "vectors/VectorDouble.h"
 #include "recorder/Recorder.h"
 #include "commonauto/AsyncLoop.h"
-// #include "commonauto/steps/DriveStatic.h"
-// #include "commonauto/steps/WaitSeconds.h"
+#include "logging/Logger.h"
 
 class SwerveTrain {
 
@@ -85,18 +84,32 @@ class SwerveTrain {
         void Stop();
 
         /**
-         * Sets the zero position of all swerve modules.
+         * Sets the software zero position of all swerve modules.
          * 
          * Gets the current encoder values of the swerve motors and stores them
          * as privates of the class. These are the values the swerve motors return
-         * to when invoking AssumeSwerveZeroPosition().
-         * If the passed bool is true, publishes the stored data to the
-         * SmartDashboard. This is currently used for returning to and maintaining
-         * "straight".
+         * to when invoking AssumeSwerveZeroPosition(). These positions are
+         * "software" zeros because they are really offsets used in the
+         * calculations after getting the "hardware" values. This function
+         * should only be used during testing when it is quicker to re-zero
+         * than to power-cycle the robot. For competition, it is advised to not
+         * use this function; instead, if the hardware zeros are set before a
+         * match, the zeros will prevail at a hardware level between
+         * enable/disable cycles. If the passed bool is true, this function
+         * publishes the stored data to theSmartDashboard. This is currently
+         * used for returning to and maintaining "straight".
          * 
          * @param verbose Whether or not to print the positions
          */
-        void SetZeroPosition(const bool &verbose = false);
+        void SetSoftwareZero(const bool &verbose = false);
+
+        /**
+         * Resets each swerve module's swerve encoder.
+         * 
+         * Resets each swerve module's swerve encoder to output 0 as the
+         * current position.
+         */
+        void HardwareZero();
 
         /**
          * Drives the swerves to return to their zero position.
@@ -192,4 +205,13 @@ class SwerveTrain {
          * @return Whether or not the swerve modules are at the vector
          */
         bool SetZionMotorsToVector(VectorDouble &vectorToSet);
+
+        /**
+         * Logs a string to stdout (riolog).
+         * 
+         * Logs a string to stdout (riolog).
+         * 
+         * @param msg The message to log
+         */
+        void Log(std::string msg);
 };

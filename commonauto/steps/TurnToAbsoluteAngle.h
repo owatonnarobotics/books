@@ -51,7 +51,7 @@ class TurnToAbsoluteAngle : public AutoStep {
 
                     speed = -1;
                 }
-                SwerveTrain::GetInstance().Drive(0, 0, speed, false, false, false);
+                SwerveTrain::GetInstance().Drive(0, 0, speed, false, false, false, AUTO_EXECUTION_CAP);
                 return false;
             }
             else {
