@@ -4,6 +4,7 @@
 #include "StepConsts.h"
 #include "navX/NavX.h"
 #include "swerve/src/include/SwerveTrain.h"
+#include "geo/GeoUtils.h"
 
 class TurnToAbsoluteAngle : public AutoStep {
 
@@ -17,28 +18,15 @@ class TurnToAbsoluteAngle : public AutoStep {
 
         bool Execute() {
 
-            double toCalculate = 0.0;
-
-            double delta = m_targetAngle - NavX::GetInstance().getYawFull();
-            if (abs(delta) > 180) {
-
-                if (delta > 0) {
-
-                    toCalculate = -(360 - delta);
-                }
-                else {
-
-                    toCalculate = 360 - (-delta);
-                }
-            }
-            else {
-
-                toCalculate = delta;
-            }
+            double toCalculate = GeoUtils::MinDistFromDelta(m_targetAngle - NavX::GetInstance().getYawFull(), 360);
 
             if (abs(toCalculate) > TURN_TO_ANGLE_ABSOLUTE__TOLERANCE) {
 
-                double speed = (pow(5, 1 / 10.0 * abs(toCalculate)) - 1) / (5 - 1);
+                double speed = (pow(5, 1 / 90.0 * abs(toCalculate)) - 1) / (5 - 1);
+                if (speed < 0.25) {
+
+                    speed = 0.1;
+                }
                 if (toCalculate < 0) {
 
                     speed *= -1;

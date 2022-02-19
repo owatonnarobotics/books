@@ -23,6 +23,9 @@ SwerveTrain::SwerveTrain(
     m_frontLeft = new SwerveModule(frontLeftCANDriveID, frontLeftCANSwerveID, frontLeftCANEncoderID);
     m_rearLeft = new SwerveModule(rearLeftCANDriveID, rearLeftCANSwerveID, rearLeftCANEncoderID);
     m_rearRight = new SwerveModule(rearRightCANDriveID, rearRightCANSwerveID, rearRightCANEncoderID);
+
+    m_wasHolding = false;
+    m_holdAngle = 0;
 }
 
 void SwerveTrain::SetDriveSpeed(const double &driveSpeed) {
@@ -103,8 +106,6 @@ void SwerveTrain::DebugSwerveModules() {
 
 void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, const bool &precision, const bool &relative, const bool &hold, const double throttle) {
 
-    static double holdAngle = 0.0;
-
     frc::SmartDashboard::PutNumber("Throttle", throttle);
 
     if (!hold && x == 0 && y == 0 && rawZ == 0) {
@@ -136,20 +137,19 @@ void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, con
 
             angle = 0;
         }
-        else if (hold) {
-
-            /*if (!wasHolding) {
-
-                holdAngle = navX->getYawFull();
-            }*/
-            angle = NavX::GetInstance().getYaw() - holdAngle;
-            //wasHolding = true;
-        }
         else {
 
             angle = NavX::GetInstance().getYawFull();
-            //wasHolding = false;
         }
+        if (hold) {
+
+            if (!m_wasHolding) {
+            
+                m_holdAngle = angle;
+            }
+            angle = GeoUtils::MinDistFromDelta(angle - m_holdAngle, 360);
+        }
+        m_wasHolding = hold;
 
         frc::SmartDashboard::PutNumber("Angle", angle);
 
@@ -179,7 +179,6 @@ void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, con
             }
             z *= -1;
             angle = NavX::GetInstance().getYawFull();
-            frc::SmartDashboard::PutNumber("HoldAngleSpeedCalculaton", z);
         }
 
         /*

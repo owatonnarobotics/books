@@ -47,6 +47,7 @@ void SwerveModule::SetSoftwareZero() {
 void SwerveModule::HardwareZero() {
 
     m_swerveMotorEncoder->SetPosition(0);
+    m_swerveZeroPosition = 0;
 }
 
 double SwerveModule::GetDrivePosition() {
@@ -84,25 +85,10 @@ double SwerveModule::AbsoluteVectorToNics(VectorDouble &vector, const double &an
 
 bool SwerveModule::AssumeSwervePosition(const double &positionToAssumeRaw, bool log) {
 
-    double toCalculate = 0.0;
-
     double modded = SingleNic(positionToAssumeRaw);
     double delta = modded - GetSwervePosition();
-    if (abs(delta) > R_nicsConstant / 2.0) {
 
-        if (delta > 0) {
-
-            toCalculate = -(R_nicsConstant - delta);
-        }
-        else {
-
-            toCalculate = R_nicsConstant - (-delta);
-        }
-    }
-    else {
-
-        toCalculate = delta;
-    }
+    double toCalculate = GeoUtils::MinDistFromDelta(delta, R_nicsConstant);
 
     if (abs(toCalculate) > R_swerveTrainAssumePositionTolerance) {
 

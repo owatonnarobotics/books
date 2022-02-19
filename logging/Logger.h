@@ -18,6 +18,7 @@ class Logger {
 
                 line += " ";
             }
-            line += msg + "\n";
+            line += msg;
+            std::cout << line << std::endl;
         }
 };

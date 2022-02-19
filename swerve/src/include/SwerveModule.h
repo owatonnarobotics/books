@@ -10,6 +10,7 @@ class SwerveModule
 
 #include "swerve/src/include/SwerveConsts.h"
 #include "vectors/VectorDouble.h"
+#include "geo/GeoUtils.h"
 
 class SwerveModule {
 

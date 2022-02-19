@@ -19,6 +19,7 @@ class SwerveTrain
 #include "recorder/Recorder.h"
 #include "commonauto/AsyncLoop.h"
 #include "logging/Logger.h"
+#include "geo/GeoUtils.h"
 
 class SwerveTrain {
 
@@ -149,6 +150,12 @@ class SwerveTrain {
 
             kForward, kRight, kBackward, kLeft
         };
+
+        void ResetHold() {
+
+            m_holdAngle = 0;
+            m_wasHolding = false;
+        }
     
     private:
         SwerveTrain(
@@ -170,6 +177,9 @@ class SwerveTrain {
         SwerveTrain& operator = (const SwerveTrain&) = delete;
         SwerveTrain(SwerveTrain&&) = delete;
         SwerveTrain& operator = (SwerveTrain&&) = delete;
+
+        bool m_wasHolding;
+        double m_holdAngle;
 
         /**
          * Sets a speed to the driving motors on the train. Defaults to zero.

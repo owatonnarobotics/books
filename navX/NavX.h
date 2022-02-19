@@ -84,6 +84,11 @@ class NavX {
             navX->Reset();
         }
 
+        void Calibrate() {
+
+            navX->Calibrate();
+        }
+
         bool isCalibrating() {
 
             return navX->IsCalibrating();
