@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include <frc/DriverStation.h>
+#include <frc/kinematics/SwerveModuleState.h>
 
 #include "swerve/src/include/SwerveTrain.h"
 
@@ -23,6 +24,15 @@ SwerveTrain::SwerveTrain(
     m_frontLeft = new SwerveModule(frontLeftCANDriveID, frontLeftCANSwerveID, frontLeftCANEncoderID);
     m_rearLeft = new SwerveModule(rearLeftCANDriveID, rearLeftCANSwerveID, rearLeftCANEncoderID);
     m_rearRight = new SwerveModule(rearRightCANDriveID, rearRightCANSwerveID, rearRightCANEncoderID);
+
+    frc::Translation2d frontLeftLocation(R_distanceFromCenterToSwerveModuleLateral, R_distanceFromCenterToSwerveModuleLateral);
+    frc::Translation2d frontRightLocation(-R_distanceFromCenterToSwerveModuleLateral, R_distanceFromCenterToSwerveModuleLateral);
+    frc::Translation2d backLeftLocation(R_distanceFromCenterToSwerveModuleLateral, -R_distanceFromCenterToSwerveModuleLateral);
+    frc::Translation2d backRightLocation(-R_distanceFromCenterToSwerveModuleLateral, -R_distanceFromCenterToSwerveModuleLateral);
+
+    frc::SwerveDriveKinematics<4> kinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
+
+    m_odometry = new frc::SwerveDriveOdometry<4>(kinematics, units::degree_t(NavX::GetInstance().getYawFull()), frc::Pose2d(0_m, 0_m, 0_rad));
 
     m_wasHolding = false;
     m_wasRelative = false;
@@ -94,6 +104,22 @@ void SwerveTrain::DebugSwerveModules() {
     m_frontLeft->Debug("FL");
     m_rearLeft->Debug("RL");
     m_rearRight->Debug("RR");
+}
+
+void SwerveTrain::UpdateOdometry() {
+
+    m_odometry->Update(
+        units::degree_t(-NavX::GetInstance().getYawFull()),
+        m_frontLeft->GetState(),
+        m_frontRight->GetState(),
+        m_rearLeft->GetState(),
+        m_rearRight->GetState()
+    );
+
+    frc::Pose2d currentPose = m_odometry->GetPose();
+    frc::SmartDashboard::PutNumber("X", currentPose.X().value());
+    frc::SmartDashboard::PutNumber("Y", currentPose.Y().value());
+    frc::SmartDashboard::PutNumber("Rotation", currentPose.Rotation().Degrees().value());
 }
 
 void SwerveTrain::Drive(const double &x, const double &y, double z, const bool relative, const bool hold, const double throttle) {

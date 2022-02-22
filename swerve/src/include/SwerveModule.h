@@ -5,6 +5,8 @@ class SwerveModule
 #pragma once
 
 #include <math.h>
+#include <units/velocity.h>
+#include <frc/kinematics/SwerveModuleState.h>
 
 #include "ctre/Phoenix.h"
 
@@ -119,11 +121,11 @@ class SwerveModule {
         double GetSwerveZeroPosition();
 
         /**
-         * Returns the speed of the drive encoder in RPM.
+         * Returns the velocity of the drive encoder in meters per second.
          * 
-         * @return The speed of the drive encoder in RPM
+         * @return The speed of the drive encoder in meters per second
          */
-        double GetDriveSpeed();
+        units::meters_per_second_t GetDriveVelocity();
 
         /**
          * Returns the speed of the swerve encoder in RPM.
@@ -171,6 +173,16 @@ class SwerveModule {
          * @param header the string to print before each data poin
          */
         void Debug(std::string header);
+
+        /**
+         * Gets the current state of the swerve module for odometry use.
+         * 
+         * Packages the drive velocity and relative angle of module in a wpilib
+         * defined struct.
+         * 
+         * @return The current state of the swerve module
+         */
+        frc::SwerveModuleState& GetState();
 
     private:
         /**

@@ -63,9 +63,9 @@ double SwerveModule::SingleNic(const double nics) {
     return fmod(nics, R_nicsConstant) + (nics < 0 ? R_nicsConstant : 0);
 }
 
-double SwerveModule::GetDriveSpeed() {
+units::meters_per_second_t SwerveModule::GetDriveVelocity() {
 
-    return 0;//m_driveMotorEncoder->GetVelocity();
+    return 0_mps;//m_driveMotorEncoder->GetVelocity();
 }
 
 double SwerveModule::GetSwerveSpeed() {
@@ -76,6 +76,16 @@ double SwerveModule::GetSwerveSpeed() {
 double SwerveModule::AbsoluteVectorToNics(VectorDouble &vector, const double &angle) {
 
     return R_nicsConstant * (vector.unitCircleAngleDeg() + angle - 90.0) / 360.0;
+}
+
+frc::SwerveModuleState& SwerveModule::GetState()  {
+
+    static frc::SwerveModuleState toReturn;
+    
+    toReturn.speed = GetDriveVelocity();
+    toReturn.angle = units::degree_t(GetSwervePosition() / R_nicsConstant * 180.0);
+
+    return toReturn;
 }
 
 bool SwerveModule::AssumeSwervePosition(const double &positionToAssumeRaw, bool log) {

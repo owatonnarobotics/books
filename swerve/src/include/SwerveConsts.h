@@ -47,3 +47,5 @@ const double R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorAt = 10.0;
 const double R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorSpeed = .075;
 const double R_swerveTrainHoldAngleSpeedCalculatonSecondEndBehaviorAt = 5.0;
 const double R_swerveTrainHoldAngleSpeedCalculatonSecondEndBehaviorSpeed = .075;
+
+const units::meter_t R_distanceFromCenterToSwerveModuleLateral = 0.368_m;

@@ -10,6 +10,8 @@ class SwerveTrain
 #include <math.h>
 
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/kinematics/SwerveDriveKinematics.h>
+#include <frc/kinematics/SwerveDriveOdometry.h>
 
 #include "ctre/Phoenix.h"
 
@@ -136,6 +138,14 @@ class SwerveTrain {
             m_wasHolding = false;
             m_wasRelative = false;
         }
+
+        /**
+         * Updates the odometry of the SwerveTrain.
+         * 
+         * Updates the SwerveTrain's odometry by getting velocity and rotation
+         * from each swerve module.
+         */
+        void UpdateOdometry();
     
     private:
         SwerveTrain(
@@ -152,6 +162,8 @@ class SwerveTrain {
             const int rearRightCANSwerveID,
             const int rearRightCANEncoderID
         );
+
+        frc::SwerveDriveOdometry<4>* m_odometry;
 
         SwerveTrain(const SwerveTrain&) = delete;
         SwerveTrain& operator = (const SwerveTrain&) = delete;
