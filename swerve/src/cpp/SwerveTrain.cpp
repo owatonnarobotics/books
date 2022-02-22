@@ -25,6 +25,7 @@ SwerveTrain::SwerveTrain(
     m_rearRight = new SwerveModule(rearRightCANDriveID, rearRightCANSwerveID, rearRightCANEncoderID);
 
     m_wasHolding = false;
+    m_wasRelative = false;
     m_holdAngle = 0;
 }
 
@@ -48,15 +49,6 @@ void SwerveTrain::Stop() {
 
     SetDriveSpeed(0);
     SetSwerveSpeed(0);
-}
-
-void SwerveTrain::SetSoftwareZero(const bool &verbose) {
-
-    m_frontRight->SetSoftwareZero();
-    m_frontLeft->SetSoftwareZero();
-    m_rearLeft->SetSoftwareZero();
-    m_rearRight->SetSoftwareZero();
-    Log("Software zeroed");
 }
 
 void SwerveTrain::HardwareZero() {
@@ -104,17 +96,50 @@ void SwerveTrain::DebugSwerveModules() {
     m_rearRight->Debug("RR");
 }
 
-void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, const bool &precision, const bool &relative, const bool &hold, const double throttle) {
+void SwerveTrain::Drive(const double &x, const double &y, double z, const bool relative, const bool hold, const double throttle) {
 
-    frc::SmartDashboard::PutNumber("Throttle", throttle);
-
-    if (!hold && x == 0 && y == 0 && rawZ == 0) {
+    if (!hold && x == 0 && y == 0 && z == 0) {
 
         Stop();
     }
     else {
-        
-        double z = rawZ;
+
+        double angle = NavX::GetInstance().getYawFull();
+
+        if (hold) {
+
+            if (!m_wasHolding) {
+            
+                m_holdAngle = angle;
+            }
+
+            double toCalculate = GeoUtils::MinDistFromDelta(angle - m_holdAngle, 360);
+            //Update our rotational speed so that we turn towards the goal.
+            //Begin initally with a double calculated with the simplex function with a horizontal stretch of factor two...
+            z = ((1) / (1 + exp((-1 * abs(1.0 / 4.0 * toCalculate)) + 5)));
+            //If we satisfy conditions for the first linear piecewise, take that speed instead...
+            if (abs(toCalculate) < R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorAt) {
+
+                z = R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorSpeed;
+            }
+            //And if we needed to travel negatively to get where we need to be, make the final speed negative...
+            if (abs(toCalculate) < R_swerveTrainHoldAngleTolerance) {
+
+                z = 0;
+            }
+            if (toCalculate < 0) {
+
+                z = -z;
+            }
+            z *= -1;
+        }
+        if (relative) {
+
+            angle = 0;        
+        }
+
+        m_wasHolding = hold;
+        m_wasRelative = relative;
 
         /*
         The translation vector is the "standard" vector - that is, if no
@@ -129,57 +154,6 @@ void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, con
         */
         //TODO: why inverted?
         VectorDouble translationVector(-x, y);
-
-        double angle;
-        //Get the navX yaw angle for computing the field-oriented
-        //angle only if field orienteds
-        if (relative) {
-
-            angle = 0;
-        }
-        else {
-
-            angle = NavX::GetInstance().getYawFull();
-        }
-        if (hold) {
-
-            if (!m_wasHolding) {
-            
-                m_holdAngle = angle;
-            }
-            angle = GeoUtils::MinDistFromDelta(angle - m_holdAngle, 360);
-        }
-        m_wasHolding = hold;
-
-        frc::SmartDashboard::PutNumber("Angle", angle);
-
-        if (hold) {
-
-            //Update our rotational speed so that we turn towards the goal.
-            //Begin initally with a double calculated with the simplex function with a horizontal stretch of factor two...
-            z = ((1) / (1 + exp((-1 * abs(1.0 / 4.0 * angle)) + 5)));
-            //If we satisfy conditions for the first linear piecewise, take that speed instead...
-            if (abs(angle) < R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorAt) {
-
-                z = R_swerveTrainHoldAngleSpeedCalculatonFirstEndBehaviorSpeed;
-            }
-            //Do the same for the second...
-            /*if (abs(angle) < R_swerveTrainHoldAngleSpeedCalculatonSecondEndBehaviorAt) {
-
-                z = R_swerveTrainHoldAngleSpeedCalculatonSecondEndBehaviorSpeed;
-            }*/
-            //And if we needed to travel negatively to get where we need to be, make the final speed negative...
-            if (abs(angle) < R_swerveTrainHoldAngleTolerance) {
-
-                z = 0;
-            }
-            if (angle < 0) {
-
-                z = -z;
-            }
-            z *= -1;
-            angle = NavX::GetInstance().getYawFull();
-        }
 
         /*
         The rotational vectors are found by multiplying the controller's
@@ -234,19 +208,10 @@ void SwerveTrain::Drive(const double &x, const double &y, const double rawZ, con
         m_rearLeft->AssumeSwervePosition(m_rearLeft->AbsoluteVectorToNics(rearLeftResultVector, angle));
         m_rearRight->AssumeSwervePosition(m_rearRight->AbsoluteVectorToNics(rearRightResultVector, angle));
 
-        const double executionCap = throttle;//precision ? R_executionCapZionPrecision : R_executionCapZion;
-        double fr = frontRightResultVector.magnitude() * executionCap;
-        double fl = frontLeftResultVector.magnitude() * executionCap;
-        double rl = rearLeftResultVector.magnitude() * executionCap;
-        double rr = rearRightResultVector.magnitude() * executionCap;
-        frc::SmartDashboard::PutNumber("fr", fr);
-        frc::SmartDashboard::PutNumber("fl", fl);
-        frc::SmartDashboard::PutNumber("rl", rl);
-        frc::SmartDashboard::PutNumber("rr", rr);
-        m_frontRight->SetDriveSpeed(fr);
-        m_frontLeft->SetDriveSpeed(fl);
-        m_rearLeft->SetDriveSpeed(rl);
-        m_rearRight->SetDriveSpeed(rr);
+        m_frontRight->SetDriveSpeed(frontRightResultVector.magnitude() * throttle);
+        m_frontLeft->SetDriveSpeed(frontLeftResultVector.magnitude() * throttle);
+        m_rearLeft->SetDriveSpeed(rearLeftResultVector.magnitude() * throttle);
+        m_rearRight->SetDriveSpeed(rearRightResultVector.magnitude() * throttle);
     }
 }
 

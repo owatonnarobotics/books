@@ -14,7 +14,7 @@ class LimelightLock : public AutoStep {
 
         bool Execute() {
 
-            SwerveTrain::GetInstance().Drive(0, 0, Limelight::GetInstance().CalculateLimelightLockSpeed(), false, false, false);
+            SwerveTrain::GetInstance().Drive(0, 0, Limelight::GetInstance().CalculateLimelightLockSpeed(), false, false);
             return Limelight::GetInstance().isWithinHorizontalTolerance();
         }
 };

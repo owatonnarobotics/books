@@ -78,15 +78,6 @@ class SwerveModule {
         void Stop();
 
         /**
-         * Sets the zero position of the swerve module.
-         * 
-         * Gets the current encoder value of the swerve motor and store it
-         * as private of the class. This is the value the swerve motor returns
-         * to when invoking AssumeSwerveZeroPosition().
-         */
-        void SetSoftwareZero();
-
-        /**
          * Resets the encoders so that they output 0 at the current position.
          * 
          * This is a "hardware" zero, meaning that when the lowest level

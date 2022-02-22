@@ -7,11 +7,12 @@
 class TimeDriveHold : public AutoStep {
 
     public:
-        TimeDriveHold(const double x, const double y, const double timeToDrive) : AutoStep("TimeDriveHold") {
+        TimeDriveHold(const double x, const double y, const double timeToDrive, const bool jerk = false) : AutoStep("TimeDriveHold") {
 
             m_totalTimeToDrive = timeToDrive;
             m_x = x;
             m_y = y;
+            m_jerk = jerk;
         }
 
         void Init() {
@@ -24,21 +25,35 @@ class TimeDriveHold : public AutoStep {
 
             double speed = 0;
             double delta = frc::GetTime().value() - m_startTime;
-            if (delta <= m_totalTimeToDrive / 2.0) {
+            if (!m_jerk) {
+                
+                if (delta <= m_totalTimeToDrive / 2.0) {
 
-                speed = (pow(5, delta) - 1) / (double)(5 - 1);
+                    speed = (pow(5, delta) - 1) / (double)(5 - 1);
+                }
+                else if (delta > m_totalTimeToDrive / 2.0) {
+
+                    speed = (pow(5, m_totalTimeToDrive - delta) - 1) / (double)(5 - 1);
+                }
+                if (speed > 1) {
+
+                    speed = 1;
+                }
             }
-            else if (delta > m_totalTimeToDrive / 2.0) {
+            else {
 
-                speed = (pow(5, m_totalTimeToDrive - delta) - 1) / (double)(5 - 1);
-            }
-            if (speed > 1) {
+                if (delta > m_totalTimeToDrive / 2.0) {
 
-                speed = 1;
+                    speed = (pow(5, m_totalTimeToDrive - delta) - 1) / (double)(5 - 1);
+                }
+                else {
+                    
+                    speed = 1;
+                }
             }
             if (delta < m_totalTimeToDrive) {
 
-                SwerveTrain::GetInstance().Drive(m_x, m_y, 0, false, false, true, speed * AUTO_EXECUTION_CAP);
+                SwerveTrain::GetInstance().Drive(m_x, m_y, 0, false, true, speed * AUTO_EXECUTION_CAP);
                 return false;
             }
             else {
@@ -53,4 +68,5 @@ class TimeDriveHold : public AutoStep {
         double m_startTime;
         double m_x;
         double m_y;
+        bool m_jerk;
 };

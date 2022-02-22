@@ -39,11 +39,6 @@ void SwerveModule::Stop() {
     SetSwerveSpeed(0);
 }
 
-void SwerveModule::SetSoftwareZero() {
-
-    m_swerveZeroPosition = m_swerveMotorEncoder->GetPosition();
-}
-
 void SwerveModule::HardwareZero() {
 
     m_swerveMotorEncoder->SetPosition(0);

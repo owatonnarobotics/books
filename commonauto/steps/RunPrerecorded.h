@@ -100,7 +100,7 @@ public:
                 double y = m_currentValue->y;
                 double z = m_currentValue->z;
                 // bool precision = m_currentValue->precision;
-                SwerveTrain::GetInstance().Drive(x, y, z, false, false, false);
+                SwerveTrain::GetInstance().Drive(x, y, z, false, false);
                 m_currentValue++;
                 return false;
             }

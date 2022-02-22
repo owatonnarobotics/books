@@ -13,7 +13,6 @@ class DriveStatic : public AutoStep {
             const double &x,
             const double &y,
             const double rawZ,
-            const bool &precision,
             const bool &relative,
             const bool &hold,
             const double throttle = 1.0
@@ -47,7 +46,6 @@ class DriveStatic : public AutoStep {
         double m_x;
         double m_y;
         double m_rawZ;
-        bool m_precision;
         bool m_relative;
         bool m_hold;
         double m_throttle;

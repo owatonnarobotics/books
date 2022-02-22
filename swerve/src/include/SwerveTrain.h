@@ -85,26 +85,6 @@ class SwerveTrain {
         void Stop();
 
         /**
-         * Sets the software zero position of all swerve modules.
-         * 
-         * Gets the current encoder values of the swerve motors and stores them
-         * as privates of the class. These are the values the swerve motors return
-         * to when invoking AssumeSwerveZeroPosition(). These positions are
-         * "software" zeros because they are really offsets used in the
-         * calculations after getting the "hardware" values. This function
-         * should only be used during testing when it is quicker to re-zero
-         * than to power-cycle the robot. For competition, it is advised to not
-         * use this function; instead, if the hardware zeros are set before a
-         * match, the zeros will prevail at a hardware level between
-         * enable/disable cycles. If the passed bool is true, this function
-         * publishes the stored data to theSmartDashboard. This is currently
-         * used for returning to and maintaining "straight".
-         * 
-         * @param verbose Whether or not to print the positions
-         */
-        void SetSoftwareZero(const bool &verbose = false);
-
-        /**
          * Resets each swerve module's swerve encoder.
          * 
          * Resets each swerve module's swerve encoder to output 0 as the
@@ -135,11 +115,10 @@ class SwerveTrain {
          * @param rawX The x value to drive the SwerveTrain with
          * @param rawY The y value to drive the SwerveTrain with
          * @param rawZ The z value to drive the SwerveTrain with
-         * @param precise Whether or not to drive with increased precision
          * @param relative Whether or not to drive relative to the robot and not the field
          * @param hold Whether or not to hold the current angle
          */
-        void Drive(const double &x, const double &y, const double rawZ, const bool &precision, const bool &relative, const bool &hold, const double throttle = 1.0);
+        void Drive(const double &x, const double &y, double z, const bool relative, const bool hold, const double throttle = 1.0);
 
         SwerveModule *m_frontRight;
         SwerveModule *m_frontLeft;
@@ -155,6 +134,7 @@ class SwerveTrain {
 
             m_holdAngle = 0;
             m_wasHolding = false;
+            m_wasRelative = false;
         }
     
     private:
@@ -179,6 +159,7 @@ class SwerveTrain {
         SwerveTrain& operator = (SwerveTrain&&) = delete;
 
         bool m_wasHolding;
+        bool m_wasRelative;
         double m_holdAngle;
 
         /**
