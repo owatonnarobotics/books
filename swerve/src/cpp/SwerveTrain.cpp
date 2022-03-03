@@ -116,10 +116,10 @@ void SwerveTrain::UpdateOdometry() {
         m_rearRight->GetState()
     );
 
-    frc::Pose2d currentPose = m_odometry->GetPose();
-    frc::SmartDashboard::PutNumber("X", currentPose.X().value());
-    frc::SmartDashboard::PutNumber("Y", currentPose.Y().value());
-    frc::SmartDashboard::PutNumber("Rotation", currentPose.Rotation().Degrees().value());
+    // frc::Pose2d currentPose = m_odometry->GetPose();
+    // frc::SmartDashboard::PutNumber("X", currentPose.X().value());
+    // frc::SmartDashboard::PutNumber("Y", currentPose.Y().value());
+    // frc::SmartDashboard::PutNumber("Rotation", currentPose.Rotation().Degrees().value());
 }
 
 void SwerveTrain::Drive(const double &x, const double &y, double z, const bool relative, const bool hold, const double throttle) {

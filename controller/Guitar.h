@@ -45,13 +45,26 @@ class Guitar {
                 m_rate = counter;
                 counter = 0;
             }
-            frc::SmartDashboard::PutNumber("counter", counter);
         }
 
         double StrumVelocity() {
 
-            frc::SmartDashboard::PutNumber("m_rate", m_rate);
+            frc::SmartDashboard::PutNumber("Guitar velocity", m_rate);
             return m_rate > R_maxStrumsPerSecond * R_samplingWindow ? 1.0 : m_rate / ((double)R_maxStrumsPerSecond * R_samplingWindow);
+        }
+
+        enum GuitarButton {
+
+            kGreen = 8,
+            kRed = 2,
+            kYellow = 1,
+            kBlue = 3,
+            kOrange = 4
+        };
+
+        bool GetGuitarButton(GuitarButton button) {
+            
+            return m_controller->GetRawButton((int)button);
         }
 
     private:
