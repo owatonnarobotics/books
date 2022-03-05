@@ -6,7 +6,7 @@ const int R_CANIDZionFrontRightDrive  = 2;
 const int R_CANIDZionFrontLeftSwerve  = 3;
 const int R_CANIDZionFrontLeftDrive   = 4;
 const int R_CANIDZionRearLeftSwerve   = 5;
-const int R_CANIDZionRearLeftDrive    = 6;
+const int R_CANIDZionRearLeftDrive    = 19;
 const int R_CANIDZionRearRightSwerve  = 7;
 const int R_CANIDZionRearRightDrive   = 8;
 

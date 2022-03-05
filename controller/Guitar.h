@@ -49,7 +49,6 @@ class Guitar {
 
         double StrumVelocity() {
 
-            frc::SmartDashboard::PutNumber("Guitar velocity", m_rate);
             return m_rate > R_maxStrumsPerSecond * R_samplingWindow ? 1.0 : m_rate / ((double)R_maxStrumsPerSecond * R_samplingWindow);
         }
 
