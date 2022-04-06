@@ -66,6 +66,11 @@ class Guitar {
             return m_controller->GetRawButton((int)button);
         }
 
+        bool GetGuitarButtonPressed(GuitarButton button) {
+
+            return m_controller->GetRawButtonPressed((int)button);
+        }
+
     private:
         frc::Joystick* m_controller;
         double m_rate;

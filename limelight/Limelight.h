@@ -90,6 +90,7 @@ class Limelight {
                 //Update our rotational speed so that we turn towards the goal.
                 //Begin initally with a double calculated with the simplex function with a horizontal stretch of factor two...
                 double toReturn = ((1) / (1 + exp((-1 * (0.5 * abs(0.5 * howFarRemainingInTravelInDegrees))) + 5)));
+                frc::SmartDashboard::PutNumber("tr", toReturn);
                 //If we satisfy conditions for the first linear piecewise, take that speed instead...
                 if (abs(howFarRemainingInTravelInDegrees) < R_swerveTrainLimelightLockPositionSpeedCalculatonFirstEndBehaviorAt) {
 
