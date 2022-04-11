@@ -1,0 +1,5 @@
+# Docs
+Dear reader,\
+&nbsp;&nbsp;&nbsp;&nbsp;This documentation is intended to be the most comprehensive guide to programming in FRC I can produce. For the past four years, I have lived and breathed WPILib. This documentation will not focus on just code; it will cover almost everything I have learned related to the control system. This includes everything from the CAN bus to Git to limit switches. It is hard to convey how much I have learned about the control system in FRC, from official documentation, unofficial documentation, trial and error, failure, and most importantly, the programming leads before me. If I have learned anything in my FIRST career as a student, it is that with dedication and experimentation for the subject, one can excell. A large portion of what I have learned about the FRC control system cam from experimentation. I would encourage the reader to venture into the unknown; build some sketchy code and deploy it—just make sure the robot is on stilts first :).\
+Sincerely,\
+&nbsp;&nbsp;&nbsp;&nbsp;dylan-meiners
