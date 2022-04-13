@@ -10,7 +10,7 @@ Please do not be scared away from the length of these docs. These docs are meant
 
 ### Sections
 1. Introduction
-2. [Hardware](hardware.md) (yes, this is programming team)
+2. [Hardware (yes, this is programming team)](hardware.md)
 3. National Instruments FRC Game Tools
 4. Competition Matches & FMS
 5. The WPILib Development Environment
