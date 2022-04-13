@@ -1,4 +1,4 @@
-[< back to main menu](docs/index.md)
+[< back to main menu](index.md)
 
 ---
 
