@@ -44,6 +44,6 @@ When the robot is disabled, the Driver Station will display the battery's idle v
 ---
 [< back to top of page](#hardware)
 
-[< back to main menu](docs/index.md)
+[< back to main menu](index.md)
 
 [^1]: (https://docs.wpilib.org/en/stable/docs/software/roborio-info/roborio-brownouts.html#:~:text=The%20roboRIO%20uses%20a%20staged,the%20battery%20voltage%20dangerously%20low)
