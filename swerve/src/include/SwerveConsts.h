@@ -1,19 +1,19 @@
 #pragma once
 
 /*_____RoboRIO CAN Bus ID Declarations_____*/
-const int R_CANIDZionFrontRightSwerve = 1;
-const int R_CANIDZionFrontRightDrive  = 2;
+const int R_CANIDZionFrontRightSwerve = 12;
+const int R_CANIDZionFrontRightDrive  = 10;
 const int R_CANIDZionFrontLeftSwerve  = 3;
-const int R_CANIDZionFrontLeftDrive   = 4;
-const int R_CANIDZionRearLeftSwerve   = 5;
-const int R_CANIDZionRearLeftDrive    = 19;
-const int R_CANIDZionRearRightSwerve  = 7;
-const int R_CANIDZionRearRightDrive   = 8;
+const int R_CANIDZionFrontLeftDrive   = 1;
+const int R_CANIDZionRearLeftSwerve   = 9;
+const int R_CANIDZionRearLeftDrive    = 7;
+const int R_CANIDZionRearRightSwerve  = 6;
+const int R_CANIDZionRearRightDrive   = 4;
 
-const int R_CANIDZionFrontRightEncoder = 9;
-const int R_CANIDZionFrontLeftEncoder = 10;
-const int R_CANIDZionRearLeftEncoder = 11;
-const int R_CANIDZionRearRightEncoder = 12;
+const int R_CANIDZionFrontRightEncoder = 11;
+const int R_CANIDZionFrontLeftEncoder = 2;
+const int R_CANIDZionRearLeftEncoder = 8;
+const int R_CANIDZionRearRightEncoder = 5;
 /*___End RoboRIO CAN Bus ID Declarations___*/
 
 // The CANCoder's default encoder max 12-bit value
